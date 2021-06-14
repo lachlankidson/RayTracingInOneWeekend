@@ -6,9 +6,24 @@
     {
         public static Vec3 RayColor(Ray ray)
         {
+            if (Program.HitSphere(new Vec3(0, 0, -1), 0.5, ray))
+            {
+                return new (1, 0, 0);
+            }
+
             Vec3 unitDirection = Vec3.UnitVector(ray.Direction);
             double t = 0.5 * (unitDirection.Y + 1);
             return ((1 - t) * new Vec3(1, 1, 1)) + (t * new Vec3(0.5, 0.7, 1));
+        }
+
+        public static bool HitSphere(Vec3 center, double radius, Ray ray)
+        {
+            Vec3 originCenter = ray.Origin - center;
+            double a = Vec3.DotProduct(ray.Direction, ray.Direction);
+            double b = 2.0 * Vec3.DotProduct(originCenter, ray.Direction);
+            double c = Vec3.DotProduct(originCenter, originCenter) - (radius * radius);
+            double discriminant = (b * b) - (4 * a * c);
+            return discriminant > 0;
         }
 
         public static void Main()
