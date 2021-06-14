@@ -24,6 +24,7 @@
             const double aspectRatio = 16 / 9.0;
             const int imageWidth = 400;
             const int imageHeight = (int)(imageWidth / aspectRatio);
+            const int samplesPerPixel = 100;
 
             // World.
             HittableList world = new ();
@@ -31,29 +32,30 @@
             world.Add(new Sphere(new Vec3(0, -100.5, -1), 100));
 
             // Camera.
-            const double viewportHeight = 2;
-            double viewportWidth = aspectRatio * viewportHeight;
-            const double focalLength = 1;
-
-            Vec3 origin = new (0, 0, 0);
-            Vec3 horizontal = new (viewportWidth, 0, 0);
-            Vec3 vertical = new (0, viewportHeight, 0);
-            Vec3 lowerLeftCorner = origin - (horizontal / 2) - (vertical / 2) - new Vec3(0, 0, focalLength);
+            Camera camera = new ();
 
             // Render.
+            Random random = new ();
             Console.Write($"P3\n{imageWidth} {imageHeight}\n255\n");
             for (int i = imageHeight - 1; i >= 0; --i)
             {
                 Console.Error.WriteLine($"Scanlines remaining: {i}");
                 for (int j = 0; j < imageWidth;  ++j)
                 {
-                    double u = (double)j / (imageWidth - 1);
-                    double v = (double)i / (imageHeight - 1);
-                    Ray ray = new (origin, lowerLeftCorner + (u * horizontal) + (v * vertical) - origin);
-                    Vec3 pixelColor = Program.RayColor(ray, world);
-                    Console.WriteLine(pixelColor.ToPpmString());
+                    Vec3 pixelColor = new (0, 0, 0);
+                    for (int k = 0; k < samplesPerPixel; ++k)
+                    {
+                        double u = (j + random.NextDouble()) / (imageWidth - 1);
+                        double v = (i + random.NextDouble()) / (imageHeight - 1);
+                        Ray ray = camera.GetRay(u, v);
+                        pixelColor += Program.RayColor(ray, world);
+                    }
+
+                    Console.WriteLine(Vec3.GetPpmString(pixelColor, samplesPerPixel));
                 }
             }
+
+            Console.Error.WriteLine($"{Environment.NewLine} Done.");
         }
     }
 }

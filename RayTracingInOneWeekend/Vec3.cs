@@ -50,10 +50,14 @@
 
         public override string ToString() => $"{this.X} {this.Y} {this.Z}";
 
-        public string ToPpmString()
+        public static string GetPpmString(Vec3 pixelColor, int noSamples)
         {
-            Vec3 temp = this * 255.999;
-            return $"{(int)temp.X} {(int)temp.Y} {(int)temp.Z}";
+            double scale = 1.0 / noSamples;
+            pixelColor *= scale;
+            int r = (int)(256 * Math.Clamp(pixelColor.X, 0, 0.999));
+            int g = (int)(256 * Math.Clamp(pixelColor.Y, 0, 0.999));
+            int b = (int)(256 * Math.Clamp(pixelColor.Z, 0, 0.999));
+            return $"{r} {g} {b}";
         }
     }
 }
