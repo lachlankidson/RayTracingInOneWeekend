@@ -18,7 +18,7 @@
             this.Hittables.AddRange(hittables);
         }
 
-        private List<Hittable> Hittables { get; init; } = new();
+        private List<Hittable> Hittables { get; init; } = new ();
 
         public void Add(Hittable hittable)
         {

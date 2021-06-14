@@ -4,13 +4,18 @@
 
     public static class Program
     {
-        public static Vec3 RayColor(Ray ray, Hittable world)
+        public static Vec3 RayColor(Ray ray, Hittable world, uint depth)
         {
-            HitRecord hitRecord = new ();
-            hitRecord.Normal = new Vec3(1, 2, 3);
-            if (world.Hit(ray, 0, double.PositiveInfinity, ref hitRecord))
+            if (depth == 0)
             {
-                return 0.5 * (hitRecord.Normal + new Vec3(1, 1, 1));
+                return new Vec3(0, 0, 0);
+            }
+
+            HitRecord hitRecord = new ();
+            if (world.Hit(ray, 0.001, double.PositiveInfinity, ref hitRecord))
+            {
+                Vec3 target = hitRecord.Point + hitRecord.Normal + Vec3.RandomUnitVector();
+                return 0.5 * Program.RayColor(new Ray(hitRecord.Point, target - hitRecord.Point), world, depth - 1);
             }
 
             Vec3 unitDirection = Vec3.UnitVector(ray.Direction);
@@ -25,6 +30,7 @@
             const int imageWidth = 400;
             const int imageHeight = (int)(imageWidth / aspectRatio);
             const int samplesPerPixel = 100;
+            const int maxDepth = 50;
 
             // World.
             HittableList world = new ();
@@ -48,7 +54,7 @@
                         double u = (j + random.NextDouble()) / (imageWidth - 1);
                         double v = (i + random.NextDouble()) / (imageHeight - 1);
                         Ray ray = camera.GetRay(u, v);
-                        pixelColor += Program.RayColor(ray, world);
+                        pixelColor += Program.RayColor(ray, world, maxDepth);
                     }
 
                     Console.WriteLine(Vec3.GetPpmString(pixelColor, samplesPerPixel));
