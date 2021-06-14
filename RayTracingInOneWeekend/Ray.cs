@@ -2,10 +2,6 @@
 {
     public class Ray
     {
-        public Ray()
-        {
-        }
-
         public Ray(Vec3 origin, Vec3 direction)
         {
             this.Origin = origin;
