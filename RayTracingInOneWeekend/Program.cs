@@ -1,21 +1,45 @@
 ﻿namespace RayTracingInOneWeekend
 {
     using System;
-    using Color = Vec3;
 
     public static class Program
     {
+        public static Vec3 RayColor(Ray ray)
+        {
+            Vec3 unitDirection = Vec3.UnitVector(ray.Direction);
+            double t = 0.5 * (unitDirection.Y + 1);
+            return ((1 - t) * new Vec3(1, 1, 1)) + (t * new Vec3(0.5, 0.7, 1));
+        }
+
         public static void Main()
         {
-            const int imageHeight = 256;
-            const int imageWidth = 256;
+            // Image.
+            const double aspectRatio = 16 / 9.0;
+            const int imageWidth = 400;
+            const int imageHeight = (int)(imageWidth / aspectRatio);
+
+            // Camera.
+            const double viewportHeight = 2;
+            double viewportWidth = aspectRatio * viewportHeight;
+            const double focalLength = 1;
+
+            Vec3 origin = new (0, 0, 0);
+            Vec3 horizontal = new (viewportWidth, 0, 0);
+            Vec3 vertical = new (0, viewportHeight, 0);
+            Vec3 lowerLeftCorner = origin - (horizontal / 2) - (vertical / 2) - new Vec3(0, 0, focalLength);
+
+            // Render.
             Console.Write($"P3\n{imageWidth} {imageHeight}\n255\n");
             for (int i = imageHeight - 1; i >= 0; --i)
             {
+                Console.Error.WriteLine($"Scanlines remaining: {i}");
                 for (int j = 0; j < imageWidth;  ++j)
                 {
-                    Color color = new (j / (imageWidth - 1), i / (imageHeight - 1),  0.25);
-                    Console.WriteLine(color.ToPpmString());
+                    double u = (double)j / (imageWidth - 1);
+                    double v = (double)i / (imageHeight - 1);
+                    Ray ray = new (origin, lowerLeftCorner + (u * horizontal) + (v * vertical) - origin);
+                    Vec3 pixelColor = Program.RayColor(ray);
+                    Console.WriteLine(pixelColor.ToPpmString());
                 }
             }
         }
