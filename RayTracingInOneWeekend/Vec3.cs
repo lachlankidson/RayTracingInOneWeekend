@@ -4,12 +4,6 @@
 
     public class Vec3
     {
-        public double X { get; init; }
-
-        public double Y { get; init; }
-
-        public double Z { get; init; }
-
         public Vec3()
         {
         }
@@ -18,6 +12,12 @@
         {
             (this.X, this.Y, this.Z) = (x, y, z);
         }
+
+        public double X { get; init; }
+
+        public double Y { get; init; }
+
+        public double Z { get; init; }
 
         public double this[int i] => i == 0 ? this.X : i == 1 ? this.Y : this.Z;
 

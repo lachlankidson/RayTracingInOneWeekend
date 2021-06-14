@@ -1,0 +1,46 @@
+﻿namespace RayTracingInOneWeekend
+{
+    using System;
+
+    public class Sphere : Hittable
+    {
+        public Sphere(Vec3 center, double radius)
+        {
+            this.Center = center;
+            this.Radius = radius;
+        }
+
+        public Vec3 Center { get; init; }
+
+        public double Radius { get; init; }
+
+        public override bool Hit(Ray ray, double tMin, double tMax, ref HitRecord hitRecord)
+        {
+            Vec3 originCenter = ray.Origin - this.Center;
+            double a = ray.Direction.LengthSquared();
+            double halfB = Vec3.DotProduct(originCenter, ray.Direction);
+            double c = originCenter.LengthSquared() - Math.Pow(this.Radius, 2);
+            double discriminant = Math.Pow(halfB, 2) - (a * c);
+            if (discriminant < 0)
+            {
+                return false;
+            }
+
+            double squareroot = Math.Sqrt(discriminant);
+            double root = (-halfB - squareroot) / a;
+            if (root < tMin || tMax < root)
+            {
+                root = (-halfB + squareroot) / a;
+                if (root < tMin || tMax < root)
+                {
+                    return false;
+                }
+            }
+
+            hitRecord.T = root;
+            hitRecord.Point = ray.At(hitRecord.T);
+            hitRecord.SetFaceNormal(ray, (hitRecord.Point - this.Center) / this.Radius);
+            return true;
+        }
+    }
+}

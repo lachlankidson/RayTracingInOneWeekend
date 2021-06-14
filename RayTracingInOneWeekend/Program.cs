@@ -4,36 +4,18 @@
 
     public static class Program
     {
-        public static Vec3 RayColor(Ray ray)
+        public static Vec3 RayColor(Ray ray, Hittable world)
         {
-            Vec3 zm1 = new (0, 0, -1);
-            double t = Program.HitSphere(zm1, 0.5, ray);
-            if (t > 0)
+            HitRecord hitRecord = new ();
+            hitRecord.Normal = new Vec3(1, 2, 3);
+            if (world.Hit(ray, 0, double.PositiveInfinity, ref hitRecord))
             {
-                Vec3 n = Vec3.UnitVector(ray.At(t) - zm1);
-                return 0.5 * new Vec3(n.X + 1, n.Y + 1, n.Z + 1);
+                return 0.5 * (hitRecord.Normal + new Vec3(1, 1, 1));
             }
 
             Vec3 unitDirection = Vec3.UnitVector(ray.Direction);
-            t = 0.5 * (unitDirection.Y + 1);
+            double t = 0.5 * (unitDirection.Y + 1);
             return ((1 - t) * new Vec3(1, 1, 1)) + (t * new Vec3(0.5, 0.7, 1));
-        }
-
-        public static double HitSphere(Vec3 center, double radius, Ray ray)
-        {
-            Vec3 originCenter = ray.Origin - center;
-            double a = Vec3.DotProduct(ray.Direction, ray.Direction);
-            double b = 2.0 * Vec3.DotProduct(originCenter, ray.Direction);
-            double c = Vec3.DotProduct(originCenter, originCenter) - Math.Pow(radius, 2);
-            double discriminant = Math.Pow(b, 2) - (4 * a * c);
-            if (discriminant < 0)
-            {
-                return -1.0;
-            }
-            else
-            {
-                return (-b - Math.Sqrt(discriminant)) / (2.0 * a);
-            }
         }
 
         public static void Main()
@@ -42,6 +24,11 @@
             const double aspectRatio = 16 / 9.0;
             const int imageWidth = 400;
             const int imageHeight = (int)(imageWidth / aspectRatio);
+
+            // World.
+            HittableList world = new ();
+            world.Add(new Sphere(new Vec3(0, 0, -1), 0.5));
+            world.Add(new Sphere(new Vec3(0, -100.5, -1), 100));
 
             // Camera.
             const double viewportHeight = 2;
@@ -63,7 +50,7 @@
                     double u = (double)j / (imageWidth - 1);
                     double v = (double)i / (imageHeight - 1);
                     Ray ray = new (origin, lowerLeftCorner + (u * horizontal) + (v * vertical) - origin);
-                    Vec3 pixelColor = Program.RayColor(ray);
+                    Vec3 pixelColor = Program.RayColor(ray, world);
                     Console.WriteLine(pixelColor.ToPpmString());
                 }
             }
