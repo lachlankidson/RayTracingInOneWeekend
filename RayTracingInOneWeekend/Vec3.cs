@@ -42,7 +42,7 @@
                 (a.Z * b.X) - (a.X * b.Z),
                 (a.X * b.Y) - (a.Y * b.X));
 
-        public static Vec3 UnitVector(in Vec3 v) => v / v.Length();
+        public static Vec3 UnitVector(Vec3 v) => v / v.Length();
 
         public double LengthSquared() => Math.Pow(this.X, 2) + Math.Pow(this.Y, 2) + Math.Pow(this.Z, 2);
 
