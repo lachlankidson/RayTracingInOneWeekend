@@ -35,7 +35,7 @@
 
         public static Vec3 operator /(Vec3 vec, double t) => vec * (1 / t);
 
-        public static double DotProduct(Vec3 a, Vec3 b) => (a.X * b.X) + (a.Y + b.Y) + (a.Z + b.Z);
+        public static double DotProduct(Vec3 a, Vec3 b) => (a.X * b.X) + (a.Y * b.Y) + (a.Z * b.Z);
 
         public static Vec3 CrossProduct(Vec3 a, Vec3 b) =>
             new ((a.Y * b.Z) - (a.Z * b.Y),
