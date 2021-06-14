@@ -14,7 +14,7 @@
             HitRecord hitRecord = new ();
             if (world.Hit(ray, 0.001, double.PositiveInfinity, ref hitRecord))
             {
-                Vec3 target = hitRecord.Point + hitRecord.Normal + Vec3.RandomUnitVector();
+                Vec3 target = hitRecord.Point + Vec3.RandomInHemisphere(hitRecord.Normal);
                 return 0.5 * Program.RayColor(new Ray(hitRecord.Point, target - hitRecord.Point), world, depth - 1);
             }
 

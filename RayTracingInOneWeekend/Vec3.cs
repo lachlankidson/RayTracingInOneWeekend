@@ -84,6 +84,12 @@
 
         public static Vec3 RandomUnitVector() => Vec3.UnitVector(Vec3.GetRandomInUnitSphere());
 
+        public static Vec3 RandomInHemisphere(Vec3 normal)
+        {
+            Vec3 inUnit = Vec3.GetRandomInUnitSphere();
+            return Vec3.DotProduct(inUnit, normal) > 0 ? inUnit : -inUnit;
+        }
+
         public double LengthSquared() => Math.Pow(this.X, 2) + Math.Pow(this.Y, 2) + Math.Pow(this.Z, 2);
 
         public double Length() => Math.Sqrt(this.LengthSquared());
