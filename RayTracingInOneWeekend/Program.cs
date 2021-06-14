@@ -14,11 +14,7 @@
             {
                 for (int j = 0; j < imageWidth;  ++j)
                 {
-                    Color color = new(
-                        (double)j / (imageWidth - 1),
-                        (double)i / (imageHeight - 1),
-                        0.25);
-
+                    Color color = new (j / (imageWidth - 1), i / (imageHeight - 1),  0.25);
                     Console.WriteLine(color.ToPpmString());
                 }
             }
