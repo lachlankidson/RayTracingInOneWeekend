@@ -1,18 +1,29 @@
 ﻿namespace RayTracing
 {
+    using System;
+
     public class Camera
     {
-        public Camera()
+        public Camera(
+            Vec3 lookFrom,
+            Vec3 lookAt,
+            Vec3 viewUp,
+            double verticalFov,
+            double aspectRatio)
         {
-            const double aspectRatio = 16 / 9.0;
-            const double viewportHeight = 2;
-            const double viewportWidth = aspectRatio * viewportHeight;
-            const double focalLength = 1;
+            double theta = (Math.PI / 180) * verticalFov;
+            double h = Math.Tan(theta / 2);
+            double viewportHeight = 2 * h;
+            double viewportWidth = aspectRatio * viewportHeight;
 
-            this.Origin = new Vec3(0, 0, 0);
-            this.Horizontal = new Vec3(viewportWidth, 0, 0);
-            this.Vertical = new Vec3(0, viewportHeight, 0);
-            this.LowerLeftCorner = this.Origin - (this.Horizontal / 2) - (this.Vertical / 2) - new Vec3(0, 0, focalLength);
+            Vec3 w = Vec3.UnitVector(lookFrom - lookAt);
+            Vec3 u = Vec3.UnitVector(Vec3.CrossProduct(viewUp, w));
+            Vec3 v = Vec3.CrossProduct(w, u);
+
+            this.Origin = lookFrom;
+            this.Horizontal = viewportWidth * u;
+            this.Vertical = viewportHeight * v;
+            this.LowerLeftCorner = this.Origin - (this.Horizontal / 2) - (this.Vertical / 2) - w;
         }
 
         public Vec3 Origin { get; init; }
@@ -23,7 +34,7 @@
 
         public Vec3 Vertical { get; set; }
 
-        public Ray GetRay(double u, double v) =>
-            new (this.Origin, this.LowerLeftCorner + (u * this.Horizontal) + (v * this.Vertical) - this.Origin);
+        public Ray GetRay(double s, double t) =>
+            new (this.Origin, this.LowerLeftCorner + (s * this.Horizontal) + (t * this.Vertical) - this.Origin);
     }
 }

@@ -39,8 +39,7 @@
 
             // World.
             HittableList world = new ();
-
-            Material ground = new Lambertian(new Vec3(.8, .8, 0));
+            Material ground = new Lambertian(new Vec3(.8, .9, 0));
             Material center = new Lambertian(new Vec3(.1, .2, .5));
             Material left = new Dielectric(1.5);
             Material right = new Metal(new Vec3(.8, .6, .2), 0);
@@ -48,11 +47,16 @@
             world.Add(new Sphere(new Vec3(0, -100.5, -1), 100, ground));
             world.Add(new Sphere(new Vec3(0, 0, -1), .5, center));
             world.Add(new Sphere(new Vec3(-1, 0, -1), .5, left));
-            world.Add(new Sphere(new Vec3(-1, 0, -1), -.4, left));
+            world.Add(new Sphere(new Vec3(-1, 0, -1), -0.45, left));
             world.Add(new Sphere(new Vec3(1, 0, -1), .5, right));
 
             // Camera.
-            Camera camera = new ();
+            Camera camera = new (
+                lookFrom: new Vec3(-2, 2, 1),
+                lookAt: new Vec3(0, 0, -1),
+                viewUp: new Vec3(0, 1, 0),
+                verticalFov: 20,
+                aspectRatio);
 
             // Render.
             Random random = new ();
