@@ -1,21 +1,24 @@
 ﻿namespace RayTracingInOneWeekend
 {
     using System;
+    using NetFabric.Hyperlinq;
 
     public class Vec3
     {
+        private readonly double[] e = new double[3];
+
         public Vec3(double x, double y, double z)
         {
-            (this.X, this.Y, this.Z) = (x, y, z);
+            (this.e[0], this.e[1], this.e[2]) = (x, y, z);
         }
 
-        public double X { get; init; }
+        public double X => this.e[0];
 
-        public double Y { get; init; }
+        public double Y => this.e[1];
 
-        public double Z { get; init; }
+        public double Z => this.e[2];
 
-        public double this[int i] => i == 0 ? this.X : i == 1 ? this.Y : this.Z;
+        public double this[int i] => this.e[i];
 
         public static Vec3 operator -(Vec3 vec) => new (-vec.X, -vec.Y, -vec.Z);
 
@@ -90,9 +93,15 @@
             return Vec3.DotProduct(inUnit, normal) > 0 ? inUnit : -inUnit;
         }
 
-        public double LengthSquared() => Math.Pow(this.X, 2) + Math.Pow(this.Y, 2) + Math.Pow(this.Z, 2);
+        public static Vec3 Reflect(Vec3 v, Vec3 n) =>
+            v - (2 * Vec3.DotProduct(v, n) * n);
+
+        public double LengthSquared() =>
+            this.e.AsValueEnumerable().Select(x => Math.Pow(x, 2)).Sum();
 
         public double Length() => Math.Sqrt(this.LengthSquared());
+
+        public bool NearZero() => this.e.AsValueEnumerable().All(x => Math.Abs(x) < 1e-8);
 
         public override string ToString() => $"{this.X} {this.Y} {this.Z}";
     }

@@ -1,18 +1,22 @@
 ﻿namespace RayTracingInOneWeekend
 {
     using System;
+    using RayTracingInOneWeekend.Materials;
 
     public class Sphere : Hittable
     {
-        public Sphere(Vec3 center, double radius)
+        public Sphere(Vec3 center, double radius, Material material)
         {
             this.Center = center;
             this.Radius = radius;
+            this.Material = material;
         }
 
         public Vec3 Center { get; init; }
 
         public double Radius { get; init; }
+
+        public Material Material { get; init; }
 
         public override bool Hit(Ray ray, double tMin, double tMax, ref HitRecord hitRecord)
         {
@@ -40,6 +44,7 @@
             hitRecord.T = root;
             hitRecord.Point = ray.At(hitRecord.T);
             hitRecord.SetFaceNormal(ray, (hitRecord.Point - this.Center) / this.Radius);
+            hitRecord.Material = this.Material;
             return true;
         }
     }

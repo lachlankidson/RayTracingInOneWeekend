@@ -1,6 +1,7 @@
 ﻿namespace RayTracingInOneWeekend
 {
     using System;
+    using RayTracingInOneWeekend.Materials;
 
     public static class Program
     {
@@ -14,8 +15,12 @@
             HitRecord hitRecord = new ();
             if (world.Hit(ray, 0.001, double.PositiveInfinity, ref hitRecord))
             {
-                Vec3 target = hitRecord.Point + Vec3.RandomInHemisphere(hitRecord.Normal);
-                return 0.5 * Program.RayColor(new Ray(hitRecord.Point, target - hitRecord.Point), world, depth - 1);
+                if (hitRecord.Material.Scatter(ray, hitRecord, out Vec3 attenuation, out Ray scatteredRay))
+                {
+                    return attenuation * Program.RayColor(scatteredRay, world, depth - 1);
+                }
+
+                return new Vec3(0, 0, 0);
             }
 
             Vec3 unitDirection = Vec3.UnitVector(ray.Direction);
@@ -29,13 +34,21 @@
             const double aspectRatio = 16 / 9.0;
             const int imageWidth = 400;
             const int imageHeight = (int)(imageWidth / aspectRatio);
-            const int samplesPerPixel = 100;
+            const int samplesPerPixel = 50;
             const int maxDepth = 50;
 
             // World.
             HittableList world = new ();
-            world.Add(new Sphere(new Vec3(0, 0, -1), 0.5));
-            world.Add(new Sphere(new Vec3(0, -100.5, -1), 100));
+
+            Material ground = new Lambertian(new Vec3(.8, .8, 0));
+            Material center = new Lambertian(new Vec3(.7, .3, .3));
+            Material left = new Metal(new Vec3(.8, .8, .8), .3);
+            Material right = new Metal(new Vec3(.8, .6, .2), 1);
+
+            world.Add(new Sphere(new Vec3(0, -100.5, -1), 100, ground));
+            world.Add(new Sphere(new Vec3(0, 0, -1), .5, center));
+            world.Add(new Sphere(new Vec3(-1, 0, -1), .5, left));
+            world.Add(new Sphere(new Vec3(1, 0, -1), .5, right));
 
             // Camera.
             Camera camera = new ();
