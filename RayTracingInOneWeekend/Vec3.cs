@@ -85,9 +85,11 @@
             }
         }
 
-        public static Vec3 RandomUnitVector() => Vec3.UnitVector(Vec3.GetRandomInUnitSphere());
 
-        public static Vec3 RandomInHemisphere(Vec3 normal)
+
+        public static Vec3 GetRandomUnitVector() => Vec3.UnitVector(Vec3.GetRandomInUnitSphere());
+
+        public static Vec3 GetRandomInHemisphere(Vec3 normal)
         {
             Vec3 inUnit = Vec3.GetRandomInUnitSphere();
             return Vec3.DotProduct(inUnit, normal) > 0 ? inUnit : -inUnit;

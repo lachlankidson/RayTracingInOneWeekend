@@ -11,7 +11,7 @@
 
         public override bool Scatter(Ray incidentRay, HitRecord hitRecord, out Vec3 attenuation, out Ray scatteredRay)
         {
-            Vec3 scatterDirection = hitRecord.Normal + Vec3.RandomUnitVector();
+            Vec3 scatterDirection = hitRecord.Normal + Vec3.GetRandomUnitVector();
             if (scatterDirection.NearZero())
             {
                 scatterDirection = hitRecord.Normal;
