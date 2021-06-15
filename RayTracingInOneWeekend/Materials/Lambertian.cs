@@ -1,4 +1,4 @@
-﻿namespace RayTracingInOneWeekend.Materials
+﻿namespace RayTracing.Materials
 {
     public class Lambertian : Material
     {

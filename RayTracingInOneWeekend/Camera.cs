@@ -1,4 +1,4 @@
-﻿namespace RayTracingInOneWeekend
+﻿namespace RayTracing
 {
     public class Camera
     {

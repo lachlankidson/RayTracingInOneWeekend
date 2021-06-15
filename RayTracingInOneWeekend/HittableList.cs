@@ -1,4 +1,4 @@
-﻿namespace RayTracingInOneWeekend
+﻿namespace RayTracing
 {
     using System.Collections.Generic;
 

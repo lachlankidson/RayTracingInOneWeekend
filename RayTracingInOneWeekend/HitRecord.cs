@@ -1,6 +1,6 @@
-﻿namespace RayTracingInOneWeekend
+﻿namespace RayTracing
 {
-    using RayTracingInOneWeekend.Materials;
+    using RayTracing.Materials;
 
     public struct HitRecord
     {

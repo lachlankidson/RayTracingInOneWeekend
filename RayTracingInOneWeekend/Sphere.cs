@@ -1,7 +1,7 @@
-﻿namespace RayTracingInOneWeekend
+﻿namespace RayTracing
 {
     using System;
-    using RayTracingInOneWeekend.Materials;
+    using RayTracing.Materials;
 
     public class Sphere : Hittable
     {
