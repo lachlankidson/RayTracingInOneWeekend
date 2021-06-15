@@ -1,7 +1,11 @@
 ﻿namespace RayTracing
 {
     using System;
+    using System.Collections.Concurrent;
+    using System.Threading.Tasks;
     using RayTracing.Materials;
+    using NetFabric.Hyperlinq;
+    using System.Linq;
 
     public static class Program
     {
@@ -28,35 +32,81 @@
             return ((1 - t) * new Vec3(1, 1, 1)) + (t * new Vec3(0.5, 0.7, 1));
         }
 
+        public static HittableList GetScene()
+        {
+            Random random = new ();
+            HittableList world = new ();
+            Material ground = new Lambertian(new Vec3(.5, .5, .5));
+            world.Add(new Sphere(new Vec3(0, -1000, 0), 1000, ground));
+
+            for (int a = -11; a < 11; a++)
+            {
+                for (int b = -11; b < 11; b++)
+                {
+                    double chooseMat = random.NextDouble();
+                    Vec3 center = new (a + (.9 * random.NextDouble()), .2, b + (.9 * random.NextDouble()));
+                    if ((center - new Vec3(4, 0.2, 0)).Length() > .9)
+                    {
+                        Material sphereMaterial;
+                        if (chooseMat < .8)
+                        {
+                            // Diffuse.
+                            Vec3 albedo = Vec3.GetRandom() * Vec3.GetRandom();
+                            sphereMaterial = new Lambertian(albedo);
+                            world.Add(new Sphere(center, .2, sphereMaterial));
+                        }
+                        else if (chooseMat < .95)
+                        {
+                            // Metal.
+                            Vec3 albedo = Vec3.GetRandom(.5, 1);
+                            double fuzz = random.NextDouble() / 2;
+                            sphereMaterial = new Metal(albedo, fuzz);
+                            world.Add(new Sphere(center, .2, sphereMaterial));
+                        }
+                        else
+                        {
+                            // Glass.
+                            sphereMaterial = new Dielectric(1.5);
+                            world.Add(new Sphere(center, .2, sphereMaterial));
+                        }
+                    }
+                }
+            }
+
+            world.Add(new Sphere(new Vec3(0, 1, 0), 1, new Dielectric(1.5)));
+            world.Add(new Sphere(new Vec3(-4, 1, 0), 1, new Lambertian(new Vec3(.4, .2, .1))));
+            world.Add(new Sphere(new Vec3(4, 1, 0), 1, new Metal(new Vec3(.7, .6, .5), 0)));
+            return world;
+
+        }
+
         public static void Main()
         {
             // Image.
-            const double aspectRatio = 16 / 9.0;
-            const int imageWidth = 400;
+            const double aspectRatio = 3 / 2.0;
+            const int imageWidth = 500;
             const int imageHeight = (int)(imageWidth / aspectRatio);
-            const int samplesPerPixel = 50;
+            const int samplesPerPixel = 20;
             const int maxDepth = 50;
 
             // World.
-            HittableList world = new ();
-            Material ground = new Lambertian(new Vec3(.8, .9, 0));
-            Material center = new Lambertian(new Vec3(.1, .2, .5));
-            Material left = new Dielectric(1.5);
-            Material right = new Metal(new Vec3(.8, .6, .2), 0);
+            HittableList world = Program.GetScene();
 
-            world.Add(new Sphere(new Vec3(0, -100.5, -1), 100, ground));
-            world.Add(new Sphere(new Vec3(0, 0, -1), .5, center));
-            world.Add(new Sphere(new Vec3(-1, 0, -1), .5, left));
-            world.Add(new Sphere(new Vec3(-1, 0, -1), -0.45, left));
-            world.Add(new Sphere(new Vec3(1, 0, -1), .5, right));
+            Vec3 lookFrom = new (13, 2, 3);
+            Vec3 lookAt = new (0, 0, 0);
+            Vec3 viewUp = new (0, 1, 0);
+            double distanceToFocus = 10;
+            double aperature = .1;
 
             // Camera.
             Camera camera = new (
-                lookFrom: new Vec3(-2, 2, 1),
-                lookAt: new Vec3(0, 0, -1),
-                viewUp: new Vec3(0, 1, 0),
+                lookFrom,
+                lookAt,
+                viewUp,
                 verticalFov: 20,
-                aspectRatio);
+                aspectRatio,
+                aperature,
+                distanceToFocus);
 
             // Render.
             Random random = new ();

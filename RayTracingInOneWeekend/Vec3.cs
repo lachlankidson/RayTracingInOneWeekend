@@ -95,6 +95,24 @@
             return Vec3.DotProduct(inUnit, normal) > 0 ? inUnit : -inUnit;
         }
 
+        public static Vec3 GetRandomInUnitDisk()
+        {
+            Random random = new ();
+            while (true)
+            {
+                Vec3 p = new (
+                    (random.NextDouble() * 2) - 1,
+                    (random.NextDouble() * 2) - 1,
+                    0);
+                if (p.LengthSquared() >= 1)
+                {
+                    continue;
+                }
+
+                return p;
+            }
+        }
+
         public static Vec3 Reflect(Vec3 v, Vec3 n) =>
             v - (2 * Vec3.DotProduct(v, n) * n);
 
