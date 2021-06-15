@@ -96,6 +96,14 @@
         public static Vec3 Reflect(Vec3 v, Vec3 n) =>
             v - (2 * Vec3.DotProduct(v, n) * n);
 
+        public static Vec3 Refract(Vec3 unitVector, Vec3 normal, double ratio)
+        {
+            double cosTheta = Math.Min(Vec3.DotProduct(-unitVector, normal), 1);
+            Vec3 perpendicularRay = ratio * (unitVector + (cosTheta * normal));
+            Vec3 parallelRay = -Math.Sqrt(Math.Abs(1 - perpendicularRay.LengthSquared())) * normal;
+            return perpendicularRay + parallelRay;
+        }
+
         public double LengthSquared() =>
             this.e.AsValueEnumerable().Select(x => Math.Pow(x, 2)).Sum();
 

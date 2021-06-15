@@ -41,13 +41,14 @@
             HittableList world = new ();
 
             Material ground = new Lambertian(new Vec3(.8, .8, 0));
-            Material center = new Lambertian(new Vec3(.7, .3, .3));
-            Material left = new Metal(new Vec3(.8, .8, .8), .3);
-            Material right = new Metal(new Vec3(.8, .6, .2), 1);
+            Material center = new Lambertian(new Vec3(.1, .2, .5));
+            Material left = new Dielectric(1.5);
+            Material right = new Metal(new Vec3(.8, .6, .2), 0);
 
             world.Add(new Sphere(new Vec3(0, -100.5, -1), 100, ground));
             world.Add(new Sphere(new Vec3(0, 0, -1), .5, center));
             world.Add(new Sphere(new Vec3(-1, 0, -1), .5, left));
+            world.Add(new Sphere(new Vec3(-1, 0, -1), -.4, left));
             world.Add(new Sphere(new Vec3(1, 0, -1), .5, right));
 
             // Camera.
