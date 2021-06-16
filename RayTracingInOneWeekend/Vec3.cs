@@ -20,15 +20,15 @@
 
         public double this[int i] => this.e[i];
 
-        public static Vec3 operator -(Vec3 vec) => new (-vec.X, -vec.Y, -vec.Z);
+        public static Vec3 operator -(Vec3 vec) => new(-vec.X, -vec.Y, -vec.Z);
 
-        public static Vec3 operator -(Vec3 a, Vec3 b) => new (a.X - b.X, a.Y - b.Y, a.Z - b.Z);
+        public static Vec3 operator -(Vec3 a, Vec3 b) => new(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
 
-        public static Vec3 operator +(Vec3 a, Vec3 b) => new (a.X + b.X, a.Y + b.Y, a.Z + b.Z);
+        public static Vec3 operator +(Vec3 a, Vec3 b) => new(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
 
-        public static Vec3 operator *(Vec3 a, Vec3 b) => new (a.X * b.X, a.Y * b.Y, a.Z * b.Z);
+        public static Vec3 operator *(Vec3 a, Vec3 b) => new(a.X * b.X, a.Y * b.Y, a.Z * b.Z);
 
-        public static Vec3 operator *(Vec3 vec, double t) => new (vec.X * t, vec.Y * t, vec.Z * t);
+        public static Vec3 operator *(Vec3 vec, double t) => new(vec.X * t, vec.Y * t, vec.Z * t);
 
         public static Vec3 operator *(double t, Vec3 vec) => vec * t;
 
@@ -37,7 +37,7 @@
         public static double DotProduct(Vec3 a, Vec3 b) => (a.X * b.X) + (a.Y * b.Y) + (a.Z * b.Z);
 
         public static Vec3 CrossProduct(Vec3 a, Vec3 b) =>
-            new ((a.Y * b.Z) - (a.Z * b.Y),
+            new((a.Y * b.Z) - (a.Z * b.Y),
                 (a.Z * b.X) - (a.X * b.Z),
                 (a.X * b.Y) - (a.Y * b.X));
 
@@ -57,13 +57,13 @@
 
         public static Vec3 GetRandom()
         {
-            Random random = new ();
+            Random random = new();
             return new Vec3(random.NextDouble(), random.NextDouble(), random.NextDouble());
         }
 
         public static Vec3 GetRandom(double min, double max)
         {
-            Random random = new ();
+            Random random = new();
             double dif = max - min;
             return new Vec3(
                 (random.NextDouble() * dif) + min,
@@ -85,8 +85,6 @@
             }
         }
 
-
-
         public static Vec3 GetRandomUnitVector() => Vec3.UnitVector(Vec3.GetRandomInUnitSphere());
 
         public static Vec3 GetRandomInHemisphere(Vec3 normal)
@@ -97,10 +95,10 @@
 
         public static Vec3 GetRandomInUnitDisk()
         {
-            Random random = new ();
+            Random random = new();
             while (true)
             {
-                Vec3 p = new (
+                Vec3 p = new(
                     (random.NextDouble() * 2) - 1,
                     (random.NextDouble() * 2) - 1,
                     0);

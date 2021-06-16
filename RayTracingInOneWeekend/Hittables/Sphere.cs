@@ -1,4 +1,4 @@
-﻿namespace RayTracing
+﻿namespace RayTracing.Hittables
 {
     using System;
     using RayTracing.Materials;

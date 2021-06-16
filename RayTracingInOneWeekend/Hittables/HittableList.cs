@@ -1,4 +1,4 @@
-﻿namespace RayTracing
+﻿namespace RayTracing.Hittables
 {
     using System.Collections.Generic;
 
@@ -18,7 +18,7 @@
             this.Hittables.AddRange(hittables);
         }
 
-        private List<Hittable> Hittables { get; init; } = new ();
+        private List<Hittable> Hittables { get; init; } = new();
 
         public void Add(Hittable hittable)
         {
@@ -27,7 +27,7 @@
 
         public override bool Hit(Ray ray, double tMin, double tMax, ref HitRecord hitRecord)
         {
-            HitRecord temp = new ();
+            HitRecord temp = default;
             bool hitAnything = false;
             double closestSoFar = tMax;
             foreach (Hittable hittable in this.Hittables)

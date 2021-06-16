@@ -1,4 +1,4 @@
-﻿namespace RayTracing
+﻿namespace RayTracing.Hittables
 {
     public abstract class Hittable
     {

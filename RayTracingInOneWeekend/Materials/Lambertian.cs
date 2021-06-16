@@ -1,13 +1,15 @@
 ﻿namespace RayTracing.Materials
 {
+    using RayTracing.Hittables;
+
     public class Lambertian : Material
     {
-        Vec3 Albedo { get; init; }
-
         public Lambertian(Vec3 albedo)
         {
             this.Albedo = albedo;
         }
+
+        public Vec3 Albedo { get; init; }
 
         public override bool Scatter(Ray incidentRay, HitRecord hitRecord, out Vec3 attenuation, out Ray scatteredRay)
         {
