@@ -10,6 +10,10 @@
 
         public double T;
 
+        public double U;
+
+        public double V;
+
         public bool FrontFace;
 
         public Material Material;

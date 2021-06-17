@@ -18,6 +18,13 @@
 
         public Material Material { get; init; }
 
+        public static (double U, double V) GetSphereUv(Vec3 point)
+        {
+            double theta = Math.Acos(-point.Y);
+            double phi = Math.Atan2(-point.Z, point.X) + Math.PI;
+            return (phi / (2 * Math.PI), theta / Math.PI);
+        }
+
         public override bool Hit(Ray ray, double tMin, double tMax, ref HitRecord hitRecord)
         {
             Vec3 originCenter = ray.Origin - this.Center;
@@ -43,7 +50,9 @@
 
             hitRecord.T = root;
             hitRecord.Point = ray.At(hitRecord.T);
-            hitRecord.SetFaceNormal(ray, (hitRecord.Point - this.Center) / this.Radius);
+            Vec3 outwardNormal = (hitRecord.Point - this.Center) / this.Radius;
+            hitRecord.SetFaceNormal(ray, outwardNormal);
+            (hitRecord.U, hitRecord.V) = Sphere.GetSphereUv(outwardNormal);
             hitRecord.Material = this.Material;
             return true;
         }

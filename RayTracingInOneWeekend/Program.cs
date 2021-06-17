@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using RayTracing.Hittables;
     using RayTracing.Materials;
+    using RayTracing.Textures;
 
     public static class Program
     {
@@ -36,8 +37,8 @@
         {
             Random random = new();
             HittableList world = new();
-            Material ground = new Lambertian(new Vec3(.5, .5, .5));
-            world.Add(new Sphere(new Vec3(0, -1000, 0), 1000, ground));
+            CheckerTexture checker = new(new SolidColor(.2, .3, .1), new SolidColor(.9, .9, .9));
+            world.Add(new Sphere(new Vec3(0, -1000, 0), 1000, new Lambertian(checker)));
 
             for (int a = -11; a < 11; a++)
             {
@@ -92,7 +93,7 @@
             const double aspectRatio = 16 / 9.0;
             const int imageWidth = 400;
             const int imageHeight = (int)(imageWidth / aspectRatio);
-            const int samplesPerPixel = 100;
+            const int samplesPerPixel = 10;
             const int maxDepth = 50;
 
             // World.
