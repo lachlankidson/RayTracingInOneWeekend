@@ -1,6 +1,7 @@
 ﻿namespace RayTracing
 {
     using System;
+    using System.Linq;
     using NetFabric.Hyperlinq;
 
     public class Vec3
@@ -24,6 +25,8 @@
         public double Z => this.e[2];
 
         public double this[int i] => this.e[i];
+
+        public double[] this[Range range] => this.e[range];
 
         public static Vec3 operator -(Vec3 vec) => new(-vec.X, -vec.Y, -vec.Z);
 
