@@ -33,7 +33,7 @@
             return ((1 - t) * new Vec3(1)) + (t * new Vec3(0.5, 0.7, 1));
         }
 
-        public static HittableList GetScene()
+        public static HittableList GetRandomScene()
         {
             Random random = new();
             HittableList world = new();
@@ -87,32 +87,76 @@
             return world;
         }
 
+        public static HittableList TwoSpheres()
+        {
+            HittableList hittables = new();
+            CheckerTexture checker = new(new SolidColor(.2, .3, .1), new SolidColor(.9, .9, .9));
+            Material sphereMat = new Lambertian(checker);
+            hittables.Add(new Sphere(new Vec3(0, -10, 0), 10, sphereMat));
+            hittables.Add(new Sphere(new Vec3(0, 10, 0), 10, sphereMat));
+            return hittables;
+        }
+
+        public static HittableList TwoPerlinSpheres()
+        {
+            HittableList hittables = new();
+            Texture noise = new NoiseTexture(new Perlin());
+            Material sphereMat = new Lambertian(noise);
+            hittables.Add(new Sphere(new Vec3(0, -1000, 0), 1000, sphereMat));
+            hittables.Add(new Sphere(new Vec3(0, 2, 0), 2, sphereMat));
+            return hittables;
+        }
+
         public static void Main()
         {
             // Image.
             const double aspectRatio = 16 / 9.0;
             const int imageWidth = 400;
             const int imageHeight = (int)(imageWidth / aspectRatio);
-            const int samplesPerPixel = 10;
+            const int samplesPerPixel = 100;
             const int maxDepth = 50;
 
             // World.
-            HittableList world = Program.GetScene();
+            HittableList world = Program.GetRandomScene();
 
-            Vec3 lookFrom = new(13, 2, 3);
-            Vec3 lookAt = new(0);
+            Vec3 lookFrom;
+            Vec3 lookAt;
             Vec3 viewUp = new(0, 1, 0);
             const double distanceToFocus = 10;
-            const double aperature = .1;
+            double verticalFov = 40.0;
+            double aperture = .1;
+
+            switch (0)
+            {
+                case 1:
+                    world = Program.GetRandomScene();
+                    lookFrom = new Vec3(13, 2, 3);
+                    lookAt = new Vec3(0, 0, 0);
+                    verticalFov = 20;
+                    aperture = .1;
+                    break;
+                case 2:
+                    world = Program.TwoSpheres();
+                    lookFrom = new Vec3(13, 2, 3);
+                    lookAt = new Vec3(0, 0, 0);
+                    verticalFov = 20.0;
+                    break;
+                default:
+                    world = Program.TwoPerlinSpheres();
+                    lookFrom = new Vec3(13, 2, 3);
+                    lookAt = new Vec3(0, 0, 0);
+                    verticalFov = 20.0;
+                    break;
+            }
 
             // Camera.
             Camera camera = new(
                 lookFrom,
                 lookAt,
                 viewUp,
-                verticalFov: 20,
+                verticalFov,
                 aspectRatio,
-                aperature,
+                aperture,
                 distanceToFocus,
                 shutterOpen: 0,
                 shutterClose: 1);

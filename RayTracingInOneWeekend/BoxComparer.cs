@@ -1,8 +1,8 @@
 ﻿namespace RayTracing
 {
-    using RayTracing.Hittables;
     using System;
     using System.Collections.Generic;
+    using RayTracing.Hittables;
 
     public class BoxComparer : IComparer<Hittable>
     {
