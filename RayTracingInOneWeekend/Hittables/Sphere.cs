@@ -47,5 +47,12 @@
             hitRecord.Material = this.Material;
             return true;
         }
+
+        public override bool BoundingBox(double time0, double time1, out AxisAlignedBoundingBox boundingBox)
+        {
+            Vec3 radiusVec = new(this.Radius, this.Radius, this.Radius);
+            boundingBox = new AxisAlignedBoundingBox(this.Center - radiusVec, this.Center + radiusVec);
+            return true;
+        }
     }
 }

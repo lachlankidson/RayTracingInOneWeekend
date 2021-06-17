@@ -59,8 +59,8 @@
                                 endCenter: center2,
                                 radius: .2,
                                 material: sphereMaterial,
-                                shutterOpen: 0,
-                                shutterClose: 1));
+                                startMoving: 0,
+                                stopMoving: 1));
                         }
                         else if (chooseMat < .95)
                         {

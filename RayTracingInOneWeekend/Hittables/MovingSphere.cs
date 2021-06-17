@@ -4,22 +4,22 @@
 
     public class MovingSphere : Sphere
     {
-        public MovingSphere(Vec3 startCenter, Vec3 endCenter, double radius, Materials.Material material, double shutterOpen, double shutterClose)
+        public MovingSphere(Vec3 startCenter, Vec3 endCenter, double radius, Materials.Material material, double startMoving, double stopMoving)
             : base(startCenter, radius, material)
         {
-            this.ShutterOpen = shutterOpen;
-            this.ShutterClose = shutterClose;
+            this.StartMoving = startMoving;
+            this.StopMoving = stopMoving;
             this.EndCenter = endCenter;
         }
 
-        public double ShutterOpen { get; init; }
+        public double StartMoving { get; init; }
 
-        public double ShutterClose { get; init; }
+        public double StopMoving { get; init; }
 
         public Vec3 EndCenter { get; init; }
 
         public Vec3 GetCenterAt(double time) =>
-            this.Center + (((time - this.ShutterOpen) / (this.ShutterClose - this.ShutterOpen)) * (this.Center - this.EndCenter));
+            this.Center + (((time - this.StartMoving) / (this.StopMoving - this.StartMoving)) * (this.Center - this.EndCenter));
 
         public override bool Hit(Ray ray, double tMin, double tMax, ref HitRecord hitRecord)
         {
@@ -49,6 +49,19 @@
             Vec3 outwardNormal = (hitRecord.Point - this.GetCenterAt(ray.Time)) / this.Radius;
             hitRecord.SetFaceNormal(ray, outwardNormal);
             hitRecord.Material = this.Material;
+            return true;
+        }
+
+        public override bool BoundingBox(double startTime, double endTime, out AxisAlignedBoundingBox boundingBox)
+        {
+            AxisAlignedBoundingBox GetBox(double time)
+            {
+                Vec3 radiusVec = new(this.Radius, this.Radius, this.Radius);
+                Vec3 center = this.GetCenterAt(time);
+                return new(center - radiusVec, center + radiusVec);
+            };
+
+            boundingBox = AxisAlignedBoundingBox.GetSurroundingBox(GetBox(startTime), GetBox(endTime));
             return true;
         }
     }
