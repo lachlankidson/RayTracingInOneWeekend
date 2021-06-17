@@ -25,7 +25,7 @@
             Vec3 direction = cannotRefract
                 ? Vec3.Reflect(unitDirection, hitRecord.Normal)
                 : Vec3.Refract(unitDirection, hitRecord.Normal, refractionRatio);
-            scatteredRay = new Ray(hitRecord.Point, direction);
+            scatteredRay = new Ray(hitRecord.Point, direction, incidentRay.Time);
             return true;
         }
 

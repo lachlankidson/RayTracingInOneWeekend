@@ -19,7 +19,7 @@
                 scatterDirection = hitRecord.Normal;
             }
 
-            scatteredRay = new Ray(hitRecord.Point, scatterDirection);
+            scatteredRay = new Ray(hitRecord.Point, scatterDirection, incidentRay.Time);
             attenuation = this.Albedo;
             return true;
         }

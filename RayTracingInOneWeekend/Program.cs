@@ -53,7 +53,14 @@
                             // Diffuse.
                             Vec3 albedo = Vec3.GetRandom() * Vec3.GetRandom();
                             sphereMaterial = new Lambertian(albedo);
-                            world.Add(new Sphere(center, .2, sphereMaterial));
+                            Vec3 center2 = center + new Vec3(0, random.NextDouble() / 2, 0);
+                            world.Add(new MovingSphere(
+                                startCenter: center,
+                                endCenter: center2,
+                                radius: .2,
+                                material: sphereMaterial,
+                                shutterOpen: 0,
+                                shutterClose: 1));
                         }
                         else if (chooseMat < .95)
                         {
@@ -82,11 +89,11 @@
         public static void Main()
         {
             // Image.
-            const double aspectRatio = 3 / 2.0;
-            const int imageWidth = 1200;
+            const double aspectRatio = 16 / 9.0;
+            const int imageWidth = 400;
             const int imageHeight = (int)(imageWidth / aspectRatio);
-            const int samplesPerPixel = 20;
-            const int maxDepth = 500;
+            const int samplesPerPixel = 100;
+            const int maxDepth = 50;
 
             // World.
             HittableList world = Program.GetScene();
@@ -105,7 +112,9 @@
                 verticalFov: 20,
                 aspectRatio,
                 aperature,
-                distanceToFocus);
+                distanceToFocus,
+                shutterOpen: 0,
+                shutterClose: 1);
 
             // Render.
             Random random = new();

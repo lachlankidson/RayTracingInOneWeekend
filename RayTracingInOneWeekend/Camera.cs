@@ -11,7 +11,9 @@
             double verticalFov,
             double aspectRatio,
             double aperture,
-            double focusDistance)
+            double focusDistance,
+            double shutterOpen,
+            double shutterClose)
         {
             double theta = (Math.PI / 180) * verticalFov;
             double h = Math.Tan(theta / 2);
@@ -27,6 +29,8 @@
             this.Vertical = focusDistance * viewportHeight * this.V;
             this.LowerLeftCorner = this.Origin - (this.Horizontal / 2) - (this.Vertical / 2) - (focusDistance * this.W);
             this.LensRadius = aperture / 2;
+            this.ShutterOpen = shutterOpen;
+            this.ShutterClose = shutterClose;
         }
 
         public Vec3 Origin { get; init; }
@@ -45,13 +49,19 @@
 
         public double LensRadius { get; init; }
 
+        public double ShutterOpen { get; init; }
+
+        public double ShutterClose { get; init; }
+
         public Ray GetRay(double s, double t)
         {
+            Random random = new();
             Vec3 rd = this.LensRadius * Vec3.GetRandomInUnitDisk();
             Vec3 offset = (this.U * rd.X) + (this.V * rd.Y);
             return new Ray(
                 origin: this.Origin + offset,
-                direction: this.LowerLeftCorner + (s * this.Horizontal) + (t * this.Vertical) - this.Origin - offset);
+                direction: this.LowerLeftCorner + (s * this.Horizontal) + (t * this.Vertical) - this.Origin - offset,
+                time: (random.NextDouble() * (this.ShutterClose - this.ShutterOpen)) + this.ShutterOpen);
         }
     }
 }
