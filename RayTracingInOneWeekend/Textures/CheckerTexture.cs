@@ -1,20 +1,9 @@
 ﻿namespace RayTracing.Textures
 {
     using System;
-    using System.Linq;
 
-    public class CheckerTexture : Texture
+    public record CheckerTexture(Texture Even, Texture Odd) : Texture
     {
-        public CheckerTexture(Texture even, Texture odd)
-        {
-            this.Even = even;
-            this.Odd = odd;
-        }
-
-        public Texture Even { get; init; }
-
-        public Texture Odd { get; init; }
-
         public override Vec3 Value(double u, double v, Vec3 point)
         {
             double sines = Math.Sin(10 * point.X) * Math.Sin(10 * point.Y) * Math.Sin(10 * point.Z);

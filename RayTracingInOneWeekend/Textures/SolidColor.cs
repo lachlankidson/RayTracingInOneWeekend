@@ -1,17 +1,10 @@
 ﻿namespace RayTracing.Textures
 {
-    public class SolidColor : Texture
+    public record SolidColor(Vec3 ColorValue) : Texture
     {
-        public Vec3 ColorValue { get; init; }
-
-        public SolidColor(Vec3 color)
-        {
-            this.ColorValue = color;
-        }
-
         public SolidColor(double red, double green, double blue)
+            : this(new Vec3(red, green, blue))
         {
-            this.ColorValue = new Vec3(red, green, blue);
         }
 
         public SolidColor(double grayscale)
