@@ -13,7 +13,7 @@
         {
             if (depth == 0)
             {
-                return new Vec3(0, 0, 0);
+                return new Vec3(0);
             }
 
             HitRecord hitRecord = default;
@@ -24,12 +24,12 @@
                     return attenuation * Program.RayColor(scatteredRay, world, depth - 1);
                 }
 
-                return new Vec3(0, 0, 0);
+                return new Vec3(0);
             }
 
             Vec3 unitDirection = Vec3.UnitVector(ray.Direction);
             double t = 0.5 * (unitDirection.Y + 1);
-            return ((1 - t) * new Vec3(1, 1, 1)) + (t * new Vec3(0.5, 0.7, 1));
+            return ((1 - t) * new Vec3(1)) + (t * new Vec3(0.5, 0.7, 1));
         }
 
         public static HittableList GetScene()
@@ -99,7 +99,7 @@
             HittableList world = Program.GetScene();
 
             Vec3 lookFrom = new(13, 2, 3);
-            Vec3 lookAt = new(0, 0, 0);
+            Vec3 lookAt = new(0);
             Vec3 viewUp = new(0, 1, 0);
             const double distanceToFocus = 10;
             const double aperature = .1;
@@ -126,7 +126,7 @@
                 Parallel.For(0, imageWidth, (j) =>
                 {
                     ConcurrentBag<(int, Vec3)> colors = new();
-                    Vec3 pixelColor = new(0, 0, 0);
+                    Vec3 pixelColor = new(0);
                     Parallel.For(0, samplesPerPixel - 1, (k) =>
                     {
                         double u = (j + random.NextDouble()) / (imageWidth - 1);

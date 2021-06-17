@@ -56,7 +56,7 @@
         {
             AxisAlignedBoundingBox GetBox(double time)
             {
-                Vec3 radiusVec = new(this.Radius, this.Radius, this.Radius);
+                Vec3 radiusVec = new(this.Radius);
                 Vec3 center = this.GetCenterAt(time);
                 return new(center - radiusVec, center + radiusVec);
             };

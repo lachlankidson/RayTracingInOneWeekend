@@ -14,7 +14,7 @@
 
         public override bool Scatter(Ray incidentRay, HitRecord hitRecord, out Vec3 attenuation, out Ray scatteredRay)
         {
-            attenuation = new Vec3(1, 1, 1);
+            attenuation = new Vec3(1);
             double refractionRatio = hitRecord.FrontFace ? (1 / this.RefractiveIndex) : this.RefractiveIndex;
             Vec3 unitDirection = Vec3.UnitVector(incidentRay.Direction);
             double cosTheta = Math.Min(Vec3.DotProduct(-unitDirection, hitRecord.Normal), 1);

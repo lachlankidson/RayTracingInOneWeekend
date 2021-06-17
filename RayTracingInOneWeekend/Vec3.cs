@@ -12,6 +12,11 @@
             (this.e[0], this.e[1], this.e[2]) = (x, y, z);
         }
 
+        public Vec3(double a)
+            : this(a, a, a)
+        {
+        }
+
         public double X => this.e[0];
 
         public double Y => this.e[1];
