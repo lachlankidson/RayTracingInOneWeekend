@@ -3,15 +3,8 @@
     using System;
     using RayTracing.Hittables;
 
-    public class Dielectric : Material
+    public record Dielectric(double RefractiveIndex) : Material
     {
-        public Dielectric(double refractiveIndex)
-        {
-            this.RefractiveIndex = refractiveIndex;
-        }
-
-        public double RefractiveIndex { get; init; }
-
         public override bool Scatter(Ray incidentRay, HitRecord hitRecord, out Vec3 attenuation, out Ray scatteredRay)
         {
             attenuation = new Vec3(1);

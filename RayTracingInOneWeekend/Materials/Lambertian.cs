@@ -3,19 +3,12 @@
     using RayTracing.Hittables;
     using RayTracing.Textures;
 
-    public class Lambertian : Material
+    public record Lambertian(Texture Albedo) : Material
     {
         public Lambertian(Vec3 color)
+            : this(new SolidColor(color))
         {
-            this.Albedo = new SolidColor(color);
         }
-
-        public Lambertian(Texture texture)
-        {
-            this.Albedo = texture;
-        }
-
-        public Texture Albedo { get; init; }
 
         public override bool Scatter(Ray incidentRay, HitRecord hitRecord, out Vec3 attenuation, out Ray scatteredRay)
         {
