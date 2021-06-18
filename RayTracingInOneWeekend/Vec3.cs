@@ -18,6 +18,11 @@
         {
         }
 
+        public Vec3()
+            : this(0, 0, 0)
+        {
+        }
+
         public double X => this.e[0];
 
         public double Y => this.e[1];

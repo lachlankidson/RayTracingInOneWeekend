@@ -7,10 +7,6 @@
 
     public class BvhNode : Hittable
     {
-        public BvhNode()
-        {
-        }
-
         public BvhNode(
             IEnumerable<Hittable> source,
             ulong start,

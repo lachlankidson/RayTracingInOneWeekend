@@ -1,8 +1,9 @@
 ﻿namespace RayTracing.Hittables
 {
+    using System.Collections;
     using System.Collections.Generic;
 
-    public class HittableList : Hittable
+    public class HittableList : Hittable, IEnumerable<Hittable>
     {
         public HittableList()
         {
@@ -65,5 +66,11 @@
 
             return hitAnything;
         }
+
+        IEnumerator<Hittable> IEnumerable<Hittable>.GetEnumerator() =>
+            this.Hittables.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() =>
+            this.Hittables.GetEnumerator();
     }
 }
