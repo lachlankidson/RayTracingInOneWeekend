@@ -100,7 +100,7 @@
         public static HittableList TwoPerlinSpheres()
         {
             HittableList hittables = new();
-            Texture noise = new NoiseTexture(new Perlin());
+            Texture noise = new NoiseTexture(new Perlin(), 4);
             Material sphereMat = new Lambertian(noise);
             hittables.Add(new Sphere(new Vec3(0, -1000, 0), 1000, sphereMat));
             hittables.Add(new Sphere(new Vec3(0, 2, 0), 2, sphereMat));
