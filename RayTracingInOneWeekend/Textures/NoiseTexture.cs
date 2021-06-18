@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace RayTracing.Textures
+﻿namespace RayTracing.Textures
 {
+    using System;
+
     public record NoiseTexture(Perlin Noise, double Scale) : Texture
     {
         public override Vec3 Value(double u, double v, Vec3 point)

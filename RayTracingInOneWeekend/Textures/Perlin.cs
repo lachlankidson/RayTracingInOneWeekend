@@ -16,7 +16,6 @@
 
         public Perlin()
         {
-            Random random = new();
             this.ranvec = new Vec3[Perlin.PointCount];
             for (int i = 0; i < Perlin.PointCount; i++)
             {
@@ -58,7 +57,7 @@
             return Perlin.TrilinearInterpolation(c, u, v, w);
         }
 
-        public double Turbulence(Vec3 point, int depth=7)
+        public double Turbulence(Vec3 point, int depth = 7)
         {
             double accum = 0;
             Vec3 tempPoint = point;

@@ -45,7 +45,7 @@
 
         public Hittable Right { get; init; }
 
-        AxisAlignedBoundingBox Box { get; init; }
+        public AxisAlignedBoundingBox Box { get; init; }
 
         public override bool BoundingBox(double time0, double time1, out AxisAlignedBoundingBox boundingBox)
         {

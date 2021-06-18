@@ -59,7 +59,7 @@
                 Vec3 radiusVec = new(this.Radius);
                 Vec3 center = this.GetCenterAt(time);
                 return new(center - radiusVec, center + radiusVec);
-            };
+            }
 
             boundingBox = AxisAlignedBoundingBox.GetSurroundingBox(GetBox(startTime), GetBox(endTime));
             return true;

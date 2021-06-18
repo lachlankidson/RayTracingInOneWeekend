@@ -107,6 +107,14 @@
             return hittables;
         }
 
+        public static HittableList Earth()
+        {
+            Texture earthTexture = new ImageTexture("Images/earthmap.jpg");
+            Material earthMaterial = new Lambertian(earthTexture);
+            Sphere globe = new(new Vec3(0), 2, earthMaterial);
+            return new HittableList(globe);
+        }
+
         public static void Main()
         {
             // Image.
@@ -123,7 +131,7 @@
             Vec3 lookAt;
             Vec3 viewUp = new(0, 1, 0);
             const double distanceToFocus = 10;
-            double verticalFov = 40.0;
+            double verticalFov = 40;
             double aperture = .1;
 
             switch (0)
@@ -139,13 +147,19 @@
                     world = Program.TwoSpheres();
                     lookFrom = new Vec3(13, 2, 3);
                     lookAt = new Vec3(0, 0, 0);
-                    verticalFov = 20.0;
+                    verticalFov = 20;
                     break;
-                default:
+                case 3:
                     world = Program.TwoPerlinSpheres();
                     lookFrom = new Vec3(13, 2, 3);
                     lookAt = new Vec3(0, 0, 0);
-                    verticalFov = 20.0;
+                    verticalFov = 20;
+                    break;
+                default:
+                    world = Program.Earth();
+                    lookFrom = new Vec3(13, 2, 3);
+                    lookAt = new Vec3(0);
+                    verticalFov = 20;
                     break;
             }
 

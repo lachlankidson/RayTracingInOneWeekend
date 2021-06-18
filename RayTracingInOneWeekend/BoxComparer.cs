@@ -6,12 +6,12 @@
 
     public class BoxComparer : IComparer<Hittable>
     {
-        public int Axis { get; init; }
-
         public BoxComparer(int axis)
         {
             this.Axis = axis;
         }
+
+        public int Axis { get; init; }
 
         int IComparer<Hittable>.Compare(Hittable? x, Hittable? y)
         {
@@ -27,7 +27,6 @@
 
             bool condA = !x.BoundingBox(0, 0, out AxisAlignedBoundingBox boxA);
             bool condB = !x.BoundingBox(0, 0, out AxisAlignedBoundingBox boxB);
-
             if (condA || condB)
             {
                 throw new ArgumentException($"No bounding box in {nameof(BvhNode)} constructor.");
