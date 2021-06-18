@@ -58,6 +58,21 @@
             return Perlin.TrilinearInterpolation(c, u, v, w);
         }
 
+        public double Turbulence(Vec3 point, int depth=7)
+        {
+            double accum = 0;
+            Vec3 tempPoint = point;
+            double weight = 1;
+            for (int i = 0; i < depth; i++)
+            {
+                accum += weight * this.Noise(tempPoint);
+                weight *= 0.5;
+                tempPoint *= 2;
+            }
+
+            return Math.Abs(accum);
+        }
+
         private static double TrilinearInterpolation(Vec3[,,] c, double u, double v, double w)
         {
             static double Hermitian(double x) => Math.Pow(x, 2) * (3 - (2 * x));
