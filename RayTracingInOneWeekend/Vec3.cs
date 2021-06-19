@@ -2,7 +2,6 @@
 {
     using System;
     using System.Linq;
-    using NetFabric.Hyperlinq;
 
     public class Vec3
     {
@@ -136,11 +135,11 @@
         }
 
         public double LengthSquared() =>
-            this.e.AsValueEnumerable().Select(x => Math.Pow(x, 2)).Sum();
+            this.e.Select(x => Math.Pow(x, 2)).Sum();
 
         public double Length() => Math.Sqrt(this.LengthSquared());
 
-        public bool NearZero() => this.e.AsValueEnumerable().All(x => Math.Abs(x) < 1e-8);
+        public bool NearZero() => this.e.All(x => Math.Abs(x) < 1e-8);
 
         public override string ToString() => $"{this.X} {this.Y} {this.Z}";
     }
