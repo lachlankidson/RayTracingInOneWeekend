@@ -138,12 +138,13 @@
             Material light = new DiffuseLight(new Vec3(15, 15, 15));
             return new()
             {
-                new YzRect((0, 555), (0, 555), 555, green),
-                new YzRect((0, 555), (0, 555), 0, red),
-                new XzRect((213, 343), (227, 332), 554, light),
-                new XzRect((0, 555), (0, 555), 0, white),
-                new XzRect((0, 555), (0, 555), 555, white),
-                new XyRect((0, 555), (0, 555), 555, white),
+                //new YzRect((0, 555), (0, 555), 555, green),
+                new Rect(RectOrientation.YZ, (0, 555), (0, 555), 555, green),
+                new Rect(RectOrientation.YZ, (0, 555), (0, 555), 0, red),
+                new Rect(RectOrientation.XZ, (213, 343), (227, 332), 554, light),
+                new Rect(RectOrientation.XZ, (0, 555), (0, 555), 0, white),
+                new Rect(RectOrientation.XZ, (0, 555), (0, 555), 555, white),
+                new Rect(RectOrientation.XY, (0, 555), (0, 555), 555, white),
             };
         }
 
