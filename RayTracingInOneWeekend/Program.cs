@@ -157,6 +157,39 @@
             };
         }
 
+        public static HittableList CornellSmoke()
+        {
+            Material red = new Lambertian(new Vec3(.65, .05, .05));
+            Material white = new Lambertian(new Vec3(.73, .73, .73));
+            Material green = new Lambertian(new Vec3(.12, .45, .15));
+            Material light = new DiffuseLight(new Vec3(7, 7, 7));
+            return new()
+            {
+                new Rect(RectOrientation.YZ, (0, 555), (0, 555), 555, green),
+                new Rect(RectOrientation.YZ, (0, 555), (0, 555), 0, red),
+                new Rect(RectOrientation.XZ, (113, 443), (127, 432), 554, light),
+                new Rect(RectOrientation.XZ, (0, 555), (0, 555), 0, white),
+                new Rect(RectOrientation.XZ, (0, 555), (0, 555), 555, white),
+                new Rect(RectOrientation.XY, (0, 555), (0, 555), 555, white),
+                new ConstantMedium(
+                    boundary: new Translate(
+                        hittable: new RotateY(
+                            hittable: new Box((new Vec3(), new Vec3(165, 330, 165)), white),
+                            angle: 15),
+                        displacement: new Vec3(265, 0, 295)),
+                    density: 0.01,
+                    texture: new SolidColor(new Vec3())),
+                new ConstantMedium(
+                    boundary: new Translate(
+                        hittable: new RotateY(
+                            hittable: new Box((new Vec3(), new Vec3(165)), white),
+                            angle: -18),
+                        displacement: new Vec3(130, 0, 65)),
+                    density: 0.01,
+                    texture: new SolidColor(1)),
+            };
+        }
+
         public static void Main()
         {
             // Image.
@@ -215,7 +248,7 @@
                     verticalFov = 20;
                     samplesPerPixel = 400;
                     break;
-                default:
+                case 6:
                     world = Program.CornellBox();
                     aspectRatio = 1;
                     imageWidth = 600;
@@ -224,6 +257,15 @@
                     lookFrom = new Vec3(278, 278, -800);
                     lookAt = new Vec3(278, 278, 0);
                     verticalFov = 40;
+                    break;
+                default:
+                    world = Program.CornellSmoke();
+                    aspectRatio = 1.0;
+                    imageWidth = 600;
+                    samplesPerPixel = 200;
+                    lookFrom = new Vec3(278, 278, -800);
+                    lookAt = new Vec3(278, 278, 0);
+                    verticalFov = 40.0;
                     break;
             }
 
