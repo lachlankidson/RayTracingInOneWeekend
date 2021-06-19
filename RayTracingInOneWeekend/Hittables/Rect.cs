@@ -1,18 +1,17 @@
 ﻿namespace RayTracing.Hittables
 {
-    using RayTracing.Materials;
     using System;
+    using RayTracing.Materials;
 
     public class Rect : Hittable
     {
-        public Rect(RectOrientation orientation, (double A, double B) x, (double A, double B) z, double k, Material material)
+        public Rect(RectOrientation orientation, (double A, double B) a, (double A, double B) b, double k, Material material)
         {
-            this.A = x;
-            this.B = z;
+            this.A = a;
+            this.B = b;
             this.K = k;
             this.Material = material;
             this.Orientation = orientation;
-
         }
 
         public (double A, double B) A { get; init; }

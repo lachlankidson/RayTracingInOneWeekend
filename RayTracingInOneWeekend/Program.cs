@@ -138,13 +138,22 @@
             Material light = new DiffuseLight(new Vec3(15, 15, 15));
             return new()
             {
-                //new YzRect((0, 555), (0, 555), 555, green),
                 new Rect(RectOrientation.YZ, (0, 555), (0, 555), 555, green),
                 new Rect(RectOrientation.YZ, (0, 555), (0, 555), 0, red),
                 new Rect(RectOrientation.XZ, (213, 343), (227, 332), 554, light),
                 new Rect(RectOrientation.XZ, (0, 555), (0, 555), 0, white),
                 new Rect(RectOrientation.XZ, (0, 555), (0, 555), 555, white),
                 new Rect(RectOrientation.XY, (0, 555), (0, 555), 555, white),
+                new Translate(
+                    hittable: new RotateY(
+                        hittable: new Box((new Vec3(), new Vec3(165, 330, 165)), white),
+                        angle: 15),
+                    displacement: new Vec3(265, 0, 295)),
+                new Translate(
+                    hittable: new RotateY(
+                        hittable: new Box((new Vec3(), new Vec3(165)), white),
+                        angle: -18),
+                    displacement: new Vec3(130, 0, 65)),
             };
         }
 
@@ -153,7 +162,7 @@
             // Image.
             double aspectRatio = 16 / 9.0;
             int imageWidth = 400;
-            int samplesPerPixel = 100;
+            int samplesPerPixel = 10;
             const int maxDepth = 50;
 
             // World.
