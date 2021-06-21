@@ -126,7 +126,7 @@
                 new Sphere(new Vec3(0, -1000, 0), 1000, sphereMat),
                 new Sphere(new Vec3(0, 2, 0), 2, sphereMat),
                 new Sphere(new Vec3(0, 7, 0), 2, new DiffuseLight(color: new Vec3(3, 3, 0))),
-                new XyRect(x: (3, 5), y: (1, 3), -2, diffuseLight),
+                new Rect(RectOrientation.XY, (3, 5), (1, 3), -2, diffuseLight),
             };
         }
 
