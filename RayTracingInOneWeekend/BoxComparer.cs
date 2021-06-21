@@ -25,9 +25,9 @@
                 throw new ArgumentNullException(nameof(y));
             }
 
-            bool condA = !x.BoundingBox(0, 0, out AxisAlignedBoundingBox boxA);
-            bool condB = !x.BoundingBox(0, 0, out AxisAlignedBoundingBox boxB);
-            if (condA || condB)
+            bool condA = !x.BoundingBox(0, 0, out AxisAlignedBoundingBox? boxA);
+            bool condB = !x.BoundingBox(0, 0, out AxisAlignedBoundingBox? boxB);
+            if (condA || condB || boxA is null || boxB is null)
             {
                 throw new ArgumentException($"No bounding box in {nameof(BvhNode)} constructor.");
             }

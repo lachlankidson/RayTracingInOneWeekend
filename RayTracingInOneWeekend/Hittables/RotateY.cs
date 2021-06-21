@@ -12,7 +12,12 @@
             double radians = Math.PI / 180 * this.Angle;
             double sinTheta = Math.Sin(radians);
             double cosTheta = Math.Cos(radians);
-            this.HasBox = this.Hittable.BoundingBox(0, 1, out AxisAlignedBoundingBox boundingBox);
+            this.HasBox = this.Hittable.BoundingBox(0, 1, out AxisAlignedBoundingBox? boundingBox);
+            if (!this.HasBox || boundingBox is null)
+            {
+                this.Box = null;
+                return;
+            }
 
             var min = Enumerable.Repeat(double.PositiveInfinity, 3).ToArray();
             var max = Enumerable.Repeat(double.NegativeInfinity, 3).ToArray();
@@ -49,7 +54,7 @@
 
         public bool HasBox { get; init; }
 
-        public AxisAlignedBoundingBox Box { get; init; }
+        public AxisAlignedBoundingBox? Box { get; init; }
 
         public Hittable Hittable { get; init; }
 
@@ -85,7 +90,7 @@
             return true;
         }
 
-        public override bool BoundingBox(double time0, double time1, out AxisAlignedBoundingBox boundingBox)
+        public override bool BoundingBox(double time0, double time1, out AxisAlignedBoundingBox? boundingBox)
         {
             boundingBox = this.Box;
             return this.HasBox;

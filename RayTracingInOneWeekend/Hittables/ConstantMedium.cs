@@ -55,7 +55,7 @@
 
             double rayLength = ray.Direction.Length();
             double distanceInsideBoundary = (rec2.T - rec1.T) * rayLength;
-            double hitDistance = (-1 / this.Density) * Math.Log(new Random().NextDouble());
+            double hitDistance = -1 / this.Density * Math.Log(new Random().NextDouble());
             if (hitDistance > distanceInsideBoundary)
             {
                 return false;

@@ -6,17 +6,22 @@
 
     public class BvhNode : Hittable
     {
+        public BvhNode(IEnumerable<Hittable> source, double time0, double time1)
+            : this(source, 0, source.Count(), time0, time1)
+        {
+        }
+
         public BvhNode(
             IEnumerable<Hittable> source,
-            ulong start,
-            ulong end,
+            int start,
+            int end,
             double time0,
             double time1)
         {
             Hittable[] hittables = source.ToArray();
             int axis = new Random().Next(0, 2);
             IComparer<Hittable> boxComparer = new BoxComparer(axis);
-            ulong objectSpan = end - start;
+            int objectSpan = end - start;
             if (objectSpan == 1)
             {
                 this.Left = this.Right = hittables[start];
@@ -30,10 +35,19 @@
             else
             {
                 hittables = hittables.OrderBy(x => x, boxComparer).ToArray();
-                ulong mid = start + (objectSpan / 2);
+                int mid = start + (objectSpan / 2);
                 this.Left = new BvhNode(hittables, start, mid, time0, time1);
                 this.Right = new BvhNode(hittables, mid, end, time0, time1);
             }
+
+            bool condA = !this.Left.BoundingBox(time0, time1, out AxisAlignedBoundingBox? boxLeft);
+            bool condB = !this.Right.BoundingBox(time0, time1, out AxisAlignedBoundingBox? boxRight);
+            if (condA || condB || boxLeft is null || boxRight is null)
+            {
+                throw new Exception();
+            }
+
+            this.Box = AxisAlignedBoundingBox.GetSurroundingBox(boxLeft, boxRight);
         }
 
         public Hittable Left { get; init; }
@@ -42,7 +56,7 @@
 
         public AxisAlignedBoundingBox Box { get; init; }
 
-        public override bool BoundingBox(double time0, double time1, out AxisAlignedBoundingBox boundingBox)
+        public override bool BoundingBox(double time0, double time1, out AxisAlignedBoundingBox? boundingBox)
         {
             boundingBox = this.Box;
             return true;

@@ -190,6 +190,55 @@
             };
         }
 
+        public static HittableList FinalScene()
+        {
+            HittableList boxes = new();
+            Material ground = new Lambertian(new SolidColor(.48, .83, .53));
+            const int boxesPerSide = 20;
+            for (int i = 0; i < boxesPerSide; i++)
+            {
+                for (int j = 0; j < boxesPerSide; j++)
+                {
+                    const double w = 100;
+                    double x0 = -1000 + (i * w);
+                    double z0 = -1000 + (j * w);
+                    double x1 = x0 + w;
+                    double y1 = (new Random().NextDouble() * 100) + 1;
+                    double z1 = z0 + w;
+                    boxes.Add(new Box(
+                        (new Vec3(x0, 0, z0), new Vec3(x1, y1, z1)),
+                        ground));
+                }
+            }
+
+            HittableList boxes2 = new();
+            Material white = new Lambertian(new SolidColor(.73));
+            for (int j = 0; j < 1000; j++)
+            {
+                boxes2.Add(new Sphere(Vec3.GetRandom(0, 165), 10, white));
+            }
+
+            Material dielectric = new Dielectric(1.5);
+            Vec3 center = new(400);
+            Vec3 center2 = center + new Vec3(30, 0, 0);
+            Sphere boundary = new(new Vec3(360, 150, 145), 70, dielectric);
+            return new()
+            {
+                new BvhNode(boxes, 0, 1),
+                new Rect(RectOrientation.XZ, (123, 423), (147, 412), 554, new DiffuseLight(new Vec3(7, 7, 7))),
+                new MovingSphere(center, center2, 50, new Lambertian(new Vec3(.7, .3, .1)), 0, 1),
+                new Sphere(new Vec3(260, 150, 45), 50, dielectric),
+                new Sphere(new Vec3(0, 150, 145), 50, new Metal(new Vec3(.8, .8, .9), 1)),
+                boundary,
+                new ConstantMedium(boundary, .2, new SolidColor(.2, .4, .9)),
+                new ConstantMedium(new Sphere(new Vec3(), 5000, dielectric), .0001, new SolidColor(1)),
+                new Sphere(new Vec3(400, 200, 400), 100, new Lambertian(new ImageTexture("Images/earthmap.jpg"))),
+                new Sphere(new Vec3(220, 280, 300), 80, new Lambertian(new NoiseTexture(new Perlin(), .1))),
+                new Translate(new RotateY(new BvhNode(boxes2, 0, 1), 15), new Vec3(-100, 270, 300)),
+            };
+        }
+
+
         public static void Main()
         {
             // Image.
@@ -258,12 +307,22 @@
                     lookAt = new Vec3(278, 278, 0);
                     verticalFov = 40;
                     break;
-                default:
+                case 7:
                     world = Program.CornellSmoke();
                     aspectRatio = 1.0;
                     imageWidth = 600;
                     samplesPerPixel = 200;
                     lookFrom = new Vec3(278, 278, -800);
+                    lookAt = new Vec3(278, 278, 0);
+                    verticalFov = 40.0;
+                    break;
+                default:
+                    world = Program.FinalScene();
+                    aspectRatio = 1.0;
+                    imageWidth = 500;
+                    samplesPerPixel = 1000;
+                    backgroundColor = new Vec3();
+                    lookFrom = new Vec3(478, 278, -600);
                     lookAt = new Vec3(278, 278, 0);
                     verticalFov = 40.0;
                     break;

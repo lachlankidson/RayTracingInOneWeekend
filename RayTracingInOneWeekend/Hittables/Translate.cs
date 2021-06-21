@@ -25,9 +25,9 @@
             return true;
         }
 
-        public override bool BoundingBox(double time0, double time1, out AxisAlignedBoundingBox boundingBox)
+        public override bool BoundingBox(double time0, double time1, out AxisAlignedBoundingBox? boundingBox)
         {
-            if (this.Hittable.BoundingBox(time0, time1, out boundingBox))
+            if (!this.Hittable.BoundingBox(time0, time1, out boundingBox) || boundingBox is null)
             {
                 return false;
             }

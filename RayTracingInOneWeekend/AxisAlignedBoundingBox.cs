@@ -4,10 +4,6 @@
 
     public class AxisAlignedBoundingBox
     {
-        public AxisAlignedBoundingBox()
-        {
-        }
-
         public AxisAlignedBoundingBox(Vec3 minimum, Vec3 maximum)
         {
             this.Minimum = minimum;
