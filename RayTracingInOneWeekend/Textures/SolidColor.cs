@@ -1,18 +1,20 @@
 ﻿namespace RayTracing.Textures
 {
-    public record SolidColor(Vec3 ColorValue) : Texture
+    using System.Numerics;
+
+    public record SolidColor(Vector3 ColorValue) : Texture
     {
-        public SolidColor(double red, double green, double blue)
-            : this(new Vec3(red, green, blue))
+        public SolidColor(float red, float green, float blue)
+            : this(new Vector3(red, green, blue))
         {
         }
 
-        public SolidColor(double grayscale)
-            : this(grayscale, grayscale, grayscale)
+        public SolidColor(float grayscale)
+            : this(new Vector3(grayscale))
         {
         }
 
-        public override Vec3 Value(double u, double v, Vec3 point)
+        public override Vector3 Value(float u, float v, Vector3 point)
         {
             return this.ColorValue;
         }

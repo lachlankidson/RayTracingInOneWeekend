@@ -1,6 +1,7 @@
 ﻿namespace RayTracing.Textures
 {
     using System;
+    using System.Numerics;
 
     public class Perlin
     {
@@ -12,14 +13,14 @@
 
         private readonly int[] permZ;
 
-        private readonly Vec3[] ranvec;
+        private readonly Vector3[] ranvec;
 
         public Perlin()
         {
-            this.ranvec = new Vec3[Perlin.PointCount];
+            this.ranvec = new Vector3[Perlin.PointCount];
             for (int i = 0; i < Perlin.PointCount; i++)
             {
-                this.ranvec[i] = Vec3.UnitVector(Vec3.GetRandom(-1, 1));
+                this.ranvec[i] = Utils.GetRandomVec3(-1, 1).UnitVector();
             }
 
             this.permX = Perlin.GeneratePerm();
@@ -27,19 +28,19 @@
             this.permZ = Perlin.GeneratePerm();
         }
 
-        public double Noise(Vec3 point)
+        public float Noise(Vector3 point)
         {
-            static double Remainder(double x) => x - Math.Floor(x);
-            double u = Remainder(point.X);
-            double v = Remainder(point.Y);
-            double w = Remainder(point.Z);
+            static float Remainder(float x) => x - (float)Math.Floor(x);
+            float u = Remainder(point.X);
+            float v = Remainder(point.Y);
+            float w = Remainder(point.Z);
 
-            static int Truncate(double x) => (int)Math.Floor(x);
+            static int Truncate(float x) => (int)Math.Floor(x);
             int i = Truncate(point.X);
             int j = Truncate(point.Y);
             int k = Truncate(point.Z);
 
-            Vec3[,,] c = new Vec3[2, 2, 2];
+            Vector3[,,] c = new Vector3[2, 2, 2];
             for (int di = 0; di < 2; di++)
             {
                 for (int dj = 0; dj < 2; dj++)
@@ -57,10 +58,10 @@
             return Perlin.TrilinearInterpolation(c, u, v, w);
         }
 
-        public double Turbulence(Vec3 point, int depth = 7)
+        public double Turbulence(Vector3 point, int depth = 7)
         {
             double accum = 0;
-            Vec3 tempPoint = point;
+            Vector3 tempPoint = point;
             double weight = 1;
             for (int i = 0; i < depth; i++)
             {
@@ -72,24 +73,24 @@
             return Math.Abs(accum);
         }
 
-        private static double TrilinearInterpolation(Vec3[,,] c, double u, double v, double w)
+        private static float TrilinearInterpolation(Vector3[,,] c, float u, float v, float w)
         {
-            static double Hermitian(double x) => Math.Pow(x, 2) * (3 - (2 * x));
-            double uu = Hermitian(u);
-            double vv = Hermitian(v);
-            double ww = Hermitian(w);
-            double accum = 0;
+            static float Hermitian(float x) => (float)Math.Pow(x, 2) * (3 - (2 * x));
+            float uu = Hermitian(u);
+            float vv = Hermitian(v);
+            float ww = Hermitian(w);
+            float accum = 0;
             for (int i = 0; i < 2; i++)
             {
                 for (int j = 0; j < 2; j++)
                 {
                     for (int k = 0; k < 2; k++)
                     {
-                        Vec3 weight = new(u - i, v - j, w - k);
+                        Vector3 weight = new(u - i, v - j, w - k);
                         accum += ((i * uu) + ((1 - i) * (1 - uu))) *
                             ((j * vv) + ((1 - j) * (1 - vv))) *
                             ((k * ww) + ((1 - k) * (1 - ww))) *
-                            Vec3.DotProduct(c[i, j, k], weight);
+                            Vector3.Dot(c[i, j, k], weight);
                     }
                 }
             }

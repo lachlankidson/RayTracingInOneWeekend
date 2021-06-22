@@ -1,23 +1,22 @@
 ﻿namespace RayTracing
 {
+    using System.Numerics;
+
     public class Ray
     {
-        public Ray(Vec3 origin, Vec3 direction, double time = 0)
+        public Ray(Vector3 origin, Vector3 direction, float time = 0)
         {
             this.Origin = origin;
             this.Direction = direction;
             this.Time = time;
         }
 
-        public Vec3 Origin { get; init; }
+        public Vector3 Origin { get; init; }
 
-        public Vec3 Direction { get; init; }
+        public Vector3 Direction { get; init; }
 
-        public double Time { get; init; }
+        public float Time { get; init; }
 
-        public Vec3 At(double t)
-        {
-            return this.Origin + (t * this.Direction);
-        }
+        public Vector3 At(float t) => this.Origin + (t * this.Direction);
     }
 }

@@ -1,7 +1,9 @@
 ﻿namespace RayTracing.Textures
 {
+    using System.Numerics;
+
     public abstract record Texture()
     {
-        public virtual Vec3 Value(double u, double v, Vec3 point) => new();
+        public virtual Vector3 Value(float u, float v, Vector3 point) => Vector3.Zero;
     }
 }

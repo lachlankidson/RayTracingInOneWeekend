@@ -32,7 +32,7 @@
                 throw new ArgumentException($"No bounding box in {nameof(BvhNode)} constructor.");
             }
 
-            return boxA.Minimum[this.Axis].CompareTo(boxB.Minimum[this.Axis]);
+            return boxA.Minimum.Get(this.Axis).CompareTo(boxB.Minimum.Get(this.Axis));
         }
     }
 }

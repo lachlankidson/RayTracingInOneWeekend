@@ -1,47 +1,48 @@
 ﻿namespace RayTracing.Hittables
 {
     using System;
+    using System.Numerics;
     using RayTracing.Materials;
 
     public class Sphere : Hittable
     {
-        public Sphere(Vec3 center, double radius, Material material)
+        public Sphere(Vector3 center, float radius, Material material)
         {
             this.Center = center;
             this.Radius = radius;
             this.Material = material;
         }
 
-        public Vec3 Center { get; init; }
+        public Vector3 Center { get; init; }
 
-        public double Radius { get; init; }
+        public float Radius { get; init; }
 
         public Material Material { get; init; }
 
-        public static (double U, double V) GetSphereUv(Vec3 point)
+        public static (float U, float V) GetSphereUv(Vector3 point)
         {
-            double theta = Math.Acos(-point.Y);
-            double phi = Math.Atan2(-point.Z, point.X) + Math.PI;
-            return (phi / (2 * Math.PI), theta / Math.PI);
+            float theta = (float)Math.Acos(-point.Y);
+            float phi = (float)Math.Atan2(-point.Z, point.X) + (float)Math.PI;
+            return (phi / (2 * (float)Math.PI), theta / (float)Math.PI);
         }
 
-        public override bool Hit(Ray ray, double tMin, double tMax, ref HitRecord hitRecord)
+        public override bool Hit(Ray ray, float tMin, float tMax, ref HitRecord hitRecord)
         {
-            Vec3 originCenter = ray.Origin - this.Center;
-            double a = ray.Direction.LengthSquared();
-            double halfB = Vec3.DotProduct(originCenter, ray.Direction);
-            double c = originCenter.LengthSquared() - Math.Pow(this.Radius, 2);
-            double discriminant = Math.Pow(halfB, 2) - (a * c);
+            Vector3 originCenter = ray.Origin - this.Center;
+            float a = ray.Direction.LengthSquared();
+            float halfB = Vector3.Dot(originCenter, ray.Direction);
+            float c = originCenter.LengthSquared() - (float)Math.Pow(this.Radius, 2);
+            float discriminant = (float)Math.Pow(halfB, 2) - (a * c);
             if (discriminant < 0)
             {
                 return false;
             }
 
-            double squareroot = Math.Sqrt(discriminant);
-            double root = (-halfB - squareroot) / a;
+            float squareroot = (float)Math.Sqrt(discriminant);
+            float root = (float)(-halfB - squareroot) / a;
             if (root < tMin || tMax < root)
             {
-                root = (-halfB + squareroot) / a;
+                root = (float)(-halfB + squareroot) / a;
                 if (root < tMin || tMax < root)
                 {
                     return false;
@@ -50,16 +51,16 @@
 
             hitRecord.T = root;
             hitRecord.Point = ray.At(hitRecord.T);
-            Vec3 outwardNormal = (hitRecord.Point - this.Center) / this.Radius;
+            Vector3 outwardNormal = (hitRecord.Point - this.Center) / this.Radius;
             hitRecord.SetFaceNormal(ray, outwardNormal);
             (hitRecord.U, hitRecord.V) = Sphere.GetSphereUv(outwardNormal);
             hitRecord.Material = this.Material;
             return true;
         }
 
-        public override bool BoundingBox(double time0, double time1, out AxisAlignedBoundingBox boundingBox)
+        public override bool BoundingBox(float time0, float time1, out AxisAlignedBoundingBox boundingBox)
         {
-            Vec3 radiusVec = new(this.Radius, this.Radius, this.Radius);
+            Vector3 radiusVec = new(this.Radius);
             boundingBox = new AxisAlignedBoundingBox(this.Center - radiusVec, this.Center + radiusVec);
             return true;
         }

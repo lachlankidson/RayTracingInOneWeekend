@@ -1,13 +1,14 @@
 ﻿namespace RayTracing.Textures
 {
     using System;
+    using System.Numerics;
 
-    public record NoiseTexture(Perlin Noise, double Scale) : Texture
+    public record NoiseTexture(Perlin Noise, float Scale) : Texture
     {
-        public override Vec3 Value(double u, double v, Vec3 point)
+        public override Vector3 Value(float u, float v, Vector3 point)
         {
-            return new Vec3(1, 1, 1) * 0.5 *
-                (1 + Math.Sin((this.Scale * point.Z) + (10 * this.Noise.Turbulence(point))));
+            return Vector3.One * .5f *
+                (1 + (float)Math.Sin((this.Scale * point.Z) + (10 * this.Noise.Turbulence(point))));
         }
     }
 }

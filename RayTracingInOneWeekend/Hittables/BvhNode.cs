@@ -6,7 +6,7 @@
 
     public class BvhNode : Hittable
     {
-        public BvhNode(IEnumerable<Hittable> source, double time0, double time1)
+        public BvhNode(IEnumerable<Hittable> source, float time0, float time1)
             : this(source, 0, source.Count(), time0, time1)
         {
         }
@@ -15,8 +15,8 @@
             IEnumerable<Hittable> source,
             int start,
             int end,
-            double time0,
-            double time1)
+            float time0,
+            float time1)
         {
             Hittable[] hittables = source.ToArray();
             int axis = new Random().Next(0, 2);
@@ -56,13 +56,13 @@
 
         public AxisAlignedBoundingBox Box { get; init; }
 
-        public override bool BoundingBox(double time0, double time1, out AxisAlignedBoundingBox? boundingBox)
+        public override bool BoundingBox(float time0, float time1, out AxisAlignedBoundingBox? boundingBox)
         {
             boundingBox = this.Box;
             return true;
         }
 
-        public override bool Hit(Ray ray, double tMin, double tMax, ref HitRecord hitRecord)
+        public override bool Hit(Ray ray, float tMin, float tMax, ref HitRecord hitRecord)
         {
             if (!this.Box.Hit(ray, tMin, tMax))
             {

@@ -1,18 +1,19 @@
 ﻿namespace RayTracing.Materials
 {
+    using System.Numerics;
     using RayTracing.Hittables;
     using RayTracing.Textures;
 
     public record Lambertian(Texture Albedo) : Material
     {
-        public Lambertian(Vec3 color)
+        public Lambertian(Vector3 color)
             : this(new SolidColor(color))
         {
         }
 
-        public override bool Scatter(Ray incidentRay, HitRecord hitRecord, out Vec3 attenuation, out Ray scatteredRay)
+        public override bool Scatter(Ray incidentRay, HitRecord hitRecord, out Vector3 attenuation, out Ray scatteredRay)
         {
-            Vec3 scatterDirection = hitRecord.Normal + Vec3.GetRandomUnitVector();
+            Vector3 scatterDirection = hitRecord.Normal + Utils.GetRandomUnitVector();
             if (scatterDirection.NearZero())
             {
                 scatterDirection = hitRecord.Normal;

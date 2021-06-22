@@ -1,28 +1,29 @@
 ﻿namespace RayTracing
 {
     using System;
+    using System.Numerics;
 
     public class Camera
     {
         public Camera(
-            Vec3 lookFrom,
-            Vec3 lookAt,
-            Vec3 viewUp,
-            double verticalFov,
-            double aspectRatio,
-            double aperture,
-            double focusDistance,
-            double shutterOpen,
-            double shutterClose)
+            Vector3 lookFrom,
+            Vector3 lookAt,
+            Vector3 viewUp,
+            float verticalFov,
+            float aspectRatio,
+            float aperture,
+            float focusDistance,
+            float shutterOpen,
+            float shutterClose)
         {
-            double theta = (Math.PI / 180) * verticalFov;
-            double h = Math.Tan(theta / 2);
-            double viewportHeight = 2 * h;
-            double viewportWidth = aspectRatio * viewportHeight;
+            float theta = ((float)Math.PI / 180) * verticalFov;
+            float h = (float)Math.Tan(theta / 2);
+            float viewportHeight = 2 * h;
+            float viewportWidth = aspectRatio * viewportHeight;
 
-            this.W = Vec3.UnitVector(lookFrom - lookAt);
-            this.U = Vec3.UnitVector(Vec3.CrossProduct(viewUp, this.W));
-            this.V = Vec3.CrossProduct(this.W, this.U);
+            this.W = (lookFrom - lookAt).UnitVector();
+            this.U = Vector3.Cross(viewUp, this.W).UnitVector();
+            this.V = Vector3.Cross(this.W, this.U);
 
             this.Origin = lookFrom;
             this.Horizontal = focusDistance * viewportWidth * this.U;
@@ -33,35 +34,35 @@
             this.ShutterClose = shutterClose;
         }
 
-        public Vec3 Origin { get; init; }
+        public Vector3 Origin { get; init; }
 
-        public Vec3 LowerLeftCorner { get; init; }
+        public Vector3 LowerLeftCorner { get; init; }
 
-        public Vec3 Horizontal { get; init; }
+        public Vector3 Horizontal { get; init; }
 
-        public Vec3 Vertical { get; init; }
+        public Vector3 Vertical { get; init; }
 
-        public Vec3 W { get; init; }
+        public Vector3 W { get; init; }
 
-        public Vec3 U { get; init; }
+        public Vector3 U { get; init; }
 
-        public Vec3 V { get; init; }
+        public Vector3 V { get; init; }
 
-        public double LensRadius { get; init; }
+        public float LensRadius { get; init; }
 
-        public double ShutterOpen { get; init; }
+        public float ShutterOpen { get; init; }
 
-        public double ShutterClose { get; init; }
+        public float ShutterClose { get; init; }
 
-        public Ray GetRay(double s, double t)
+        public Ray GetRay(float s, float t)
         {
             Random random = new();
-            Vec3 rd = this.LensRadius * Vec3.GetRandomInUnitDisk();
-            Vec3 offset = (this.U * rd.X) + (this.V * rd.Y);
+            Vector3 rd = this.LensRadius * Utils.GetRandomVec3InUnitDisk();
+            Vector3 offset = (this.U * rd.X) + (this.V * rd.Y);
             return new Ray(
                 origin: this.Origin + offset,
                 direction: this.LowerLeftCorner + (s * this.Horizontal) + (t * this.Vertical) - this.Origin - offset,
-                time: (random.NextDouble() * (this.ShutterClose - this.ShutterOpen)) + this.ShutterOpen);
+                time: ((float)random.NextDouble() * (this.ShutterClose - this.ShutterOpen)) + this.ShutterOpen);
         }
     }
 }

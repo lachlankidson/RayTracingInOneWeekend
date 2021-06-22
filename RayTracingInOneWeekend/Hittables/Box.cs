@@ -1,11 +1,11 @@
 ﻿namespace RayTracing.Hittables
 {
-    using System;
+    using System.Numerics;
     using RayTracing.Materials;
 
     public class Box : Hittable
     {
-        public Box((Vec3 A, Vec3 B) coords, Material material)
+        public Box((Vector3 A, Vector3 B) coords, Material material)
         {
             this.Coordinates = coords;
             this.Material = material;
@@ -50,16 +50,16 @@
             };
         }
 
-        public (Vec3 A, Vec3 B) Coordinates { get; init; }
+        public (Vector3 A, Vector3 B) Coordinates { get; init; }
 
         public Material Material { get; init; }
 
         public HittableList Sides { get; init; }
 
-        public override bool Hit(Ray ray, double tMin, double tMax, ref HitRecord hitRecord)
+        public override bool Hit(Ray ray, float tMin, float tMax, ref HitRecord hitRecord)
             => this.Sides.Hit(ray, tMin, tMax, ref hitRecord);
 
-        public override bool BoundingBox(double time0, double time1, out AxisAlignedBoundingBox boundingBox)
+        public override bool BoundingBox(float time0, float time1, out AxisAlignedBoundingBox boundingBox)
         {
             boundingBox = new AxisAlignedBoundingBox(
                 minimum: this.Coordinates.A,

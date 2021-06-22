@@ -1,22 +1,23 @@
 ﻿namespace RayTracing
 {
     using System;
+    using System.Numerics;
 
     public class AxisAlignedBoundingBox
     {
-        public AxisAlignedBoundingBox(Vec3 minimum, Vec3 maximum)
+        public AxisAlignedBoundingBox(Vector3 minimum, Vector3 maximum)
         {
             this.Minimum = minimum;
             this.Maximum = maximum;
         }
 
-        public Vec3 Minimum { get; init; }
+        public Vector3 Minimum { get; init; }
 
-        public Vec3 Maximum { get; init; }
+        public Vector3 Maximum { get; init; }
 
         public static AxisAlignedBoundingBox GetSurroundingBox(AxisAlignedBoundingBox a, AxisAlignedBoundingBox b)
         {
-            static Vec3 GetVec(Func<double, double, double> reduce, Vec3 a, Vec3 b) =>
+            static Vector3 GetVec(Func<float, float, float> reduce, Vector3 a, Vector3 b) =>
                 new(reduce(a.X, b.X), reduce(a.Y, b.Y), reduce(a.Z, b.Z));
 
             return new AxisAlignedBoundingBox(
@@ -28,10 +29,10 @@
         {
             for (int a = 0; a < 3; a++)
             {
-                double invD = 1 / ray.Direction[a];
-                double origin = ray.Origin[a];
-                double t0 = (this.Minimum[a] - origin) * invD;
-                double t1 = (this.Maximum[a] - origin) * invD;
+                double invD = 1 / ray.Direction.Get(a);
+                double origin = ray.Origin.Get(a);
+                double t0 = (this.Minimum.Get(a) - origin) * invD;
+                double t1 = (this.Maximum.Get(a) - origin) * invD;
                 if (invD < 0)
                 {
                     (t0, t1) = (t1, t0);

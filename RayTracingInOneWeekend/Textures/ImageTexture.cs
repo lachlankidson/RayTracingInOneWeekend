@@ -2,6 +2,7 @@
 {
     using System;
     using System.IO;
+    using System.Numerics;
     using StbImageSharp;
 
     public record ImageTexture() : Texture
@@ -17,11 +18,11 @@
 
         private ImageResult? Data { get; init; }
 
-        public override Vec3 Value(double u, double v, Vec3 point)
+        public override Vector3 Value(float u, float v, Vector3 point)
         {
             if (this.Data?.Data is null)
             {
-                return new Vec3(0, 1, 1);
+                return new Vector3(0, 1, 1);
             }
 
             u = Math.Clamp(u, 0, 1);
@@ -40,11 +41,11 @@
                 j = this.Data.Height - 1;
             }
 
-            const double colorScale = 1 / 255.0;
+            const float colorScale = 1 / 255f;
             int bytesPerScanline = (int)ImageTexture.BytesPerPixel * this.Data.Width;
             int index = (j * bytesPerScanline) + (i * (int)ImageTexture.BytesPerPixel);
             byte[] data = this.Data.Data;
-            return new Vec3(data[index], data[index + 1], data[index + 2]) * colorScale;
+            return new Vector3(data[index], data[index + 1], data[index + 2]) * colorScale;
         }
     }
 }

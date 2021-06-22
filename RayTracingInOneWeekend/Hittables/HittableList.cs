@@ -26,7 +26,7 @@
             this.Hittables.Add(hittable);
         }
 
-        public override bool BoundingBox(double time0, double time1, out AxisAlignedBoundingBox? boundingBox)
+        public override bool BoundingBox(float time0, float time1, out AxisAlignedBoundingBox? boundingBox)
         {
             boundingBox = null;
             if (this.Hittables.Count == 0)
@@ -57,11 +57,11 @@
             return true;
         }
 
-        public override bool Hit(Ray ray, double tMin, double tMax, ref HitRecord hitRecord)
+        public override bool Hit(Ray ray, float tMin, float tMax, ref HitRecord hitRecord)
         {
             HitRecord temp = default;
             bool hitAnything = false;
-            double closestSoFar = tMax;
+            float closestSoFar = tMax;
             foreach (Hittable hittable in this.Hittables)
             {
                 if (hittable.Hit(ray, tMin, closestSoFar, ref temp))

@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Concurrent;
     using System.Linq;
+    using System.Numerics;
     using System.Threading.Tasks;
     using RayTracing.Hittables;
     using RayTracing.Materials;
@@ -10,21 +11,21 @@
 
     public static class Program
     {
-        public static Vec3 RayColor(Ray ray, Vec3 background, Hittable world, uint depth)
+        public static Vector3 RayColor(Ray ray, Vector3 background, Hittable world, uint depth)
         {
             if (depth == 0)
             {
-                return new Vec3(0);
+                return Vector3.Zero;
             }
 
             HitRecord hitRecord = default;
-            if (!world.Hit(ray, 0.001, double.PositiveInfinity, ref hitRecord))
+            if (!world.Hit(ray, 0.001f, float.PositiveInfinity, ref hitRecord))
             {
                 return background;
             }
 
-            Vec3 emitted = hitRecord.Material.Emitted(hitRecord.U, hitRecord.V, hitRecord.Point);
-            if (!hitRecord.Material.Scatter(ray, hitRecord, out Vec3 attenuation, out Ray scatteredRay))
+            Vector3 emitted = hitRecord.Material.Emitted(hitRecord.U, hitRecord.V, hitRecord.Point);
+            if (!hitRecord.Material.Scatter(ray, hitRecord, out Vector3 attenuation, out Ray scatteredRay))
             {
                 return emitted;
             }
@@ -36,28 +37,28 @@
         {
             Random random = new();
             HittableList world = new();
-            CheckerTexture checker = new(new SolidColor(.2, .3, .1), new SolidColor(.9, .9, .9));
-            world.Add(new Sphere(new Vec3(0, -1000, 0), 1000, new Lambertian(checker)));
+            CheckerTexture checker = new(new SolidColor(.2f, .3f, .1f), new SolidColor(.9f));
+            world.Add(new Sphere(new Vector3(0, -1000, 0), 1000, new Lambertian(checker)));
 
             for (int a = -11; a < 11; a++)
             {
                 for (int b = -11; b < 11; b++)
                 {
                     double chooseMat = random.NextDouble();
-                    Vec3 center = new(a + (.9 * random.NextDouble()), .2, b + (.9 * random.NextDouble()));
-                    if ((center - new Vec3(4, 0.2, 0)).Length() > .9)
+                    Vector3 center = new(a + (.9f * (float)random.NextDouble()), .2f, b + (.9f * (float)random.NextDouble()));
+                    if ((center - new Vector3(4, .2f, 0)).Length() > .9)
                     {
                         Material sphereMaterial;
                         if (chooseMat < .8)
                         {
                             // Diffuse.
-                            Vec3 albedo = Vec3.GetRandom() * Vec3.GetRandom();
+                            Vector3 albedo = Utils.GetRandomVec3() * Utils.GetRandomVec3();
                             sphereMaterial = new Lambertian(albedo);
-                            Vec3 center2 = center + new Vec3(0, random.NextDouble() / 2, 0);
+                            Vector3 center2 = center + new Vector3(0, (float)random.NextDouble() / 2, 0);
                             world.Add(new MovingSphere(
                                 startCenter: center,
                                 endCenter: center2,
-                                radius: .2,
+                                radius: .2f,
                                 material: sphereMaterial,
                                 startMoving: 0,
                                 stopMoving: 1));
@@ -65,35 +66,35 @@
                         else if (chooseMat < .95)
                         {
                             // Metal.
-                            Vec3 albedo = Vec3.GetRandom(.5, 1);
-                            double fuzz = random.NextDouble() / 2;
+                            Vector3 albedo = Utils.GetRandomVec3(.5f, 1);
+                            float fuzz = (float)random.NextDouble() / 2;
                             sphereMaterial = new Metal(albedo, fuzz);
-                            world.Add(new Sphere(center, .2, sphereMaterial));
+                            world.Add(new Sphere(center, .2f, sphereMaterial));
                         }
                         else
                         {
                             // Glass.
-                            sphereMaterial = new Dielectric(1.5);
-                            world.Add(new Sphere(center, .2, sphereMaterial));
+                            sphereMaterial = new Dielectric(1.5f);
+                            world.Add(new Sphere(center, .2f, sphereMaterial));
                         }
                     }
                 }
             }
 
-            world.Add(new Sphere(new Vec3(0, 1, 0), 1, new Dielectric(1.5)));
-            world.Add(new Sphere(new Vec3(-4, 1, 0), 1, new Lambertian(new Vec3(.4, .2, .1))));
-            world.Add(new Sphere(new Vec3(4, 1, 0), 1, new Metal(new Vec3(.7, .6, .5), 0)));
+            world.Add(new Sphere(new Vector3(0, 1, 0), 1, new Dielectric(1.5f)));
+            world.Add(new Sphere(new Vector3(-4, 1, 0), 1, new Lambertian(new Vector3(.4f, .2f, .1f))));
+            world.Add(new Sphere(new Vector3(4, 1, 0), 1, new Metal(new Vector3(.7f, .6f, .5f), 0)));
             return world;
         }
 
         public static HittableList TwoSpheres()
         {
-            CheckerTexture checker = new(new SolidColor(.2, .3, .1), new SolidColor(.9, .9, .9));
+            CheckerTexture checker = new(new SolidColor(.2f, .3f, .1f), new SolidColor(.9f));
             Material sphereMat = new Lambertian(checker);
             return new()
             {
-                new Sphere(new Vec3(0, -10, 0), 10, sphereMat),
-                new Sphere(new Vec3(0, 10, 0), 10, sphereMat),
+                new Sphere(new Vector3(0, -10, 0), 10, sphereMat),
+                new Sphere(new Vector3(0, 10, 0), 10, sphereMat),
             };
         }
 
@@ -103,8 +104,8 @@
             Material sphereMat = new Lambertian(noise);
             return new()
             {
-                new Sphere(new Vec3(0, -1000, 0), 1000, sphereMat),
-                new Sphere(new Vec3(0, 2, 0), 2, sphereMat),
+                new Sphere(new Vector3(0, -1000, 0), 1000, sphereMat),
+                new Sphere(new Vector3(0, 2, 0), 2, sphereMat),
             };
         }
 
@@ -112,7 +113,7 @@
         {
             Texture earthTexture = new ImageTexture("Images/earthmap.jpg");
             Material earthMaterial = new Lambertian(earthTexture);
-            Sphere globe = new(new Vec3(0), 2, earthMaterial);
+            Sphere globe = new(Vector3.Zero, 2, earthMaterial);
             return new HittableList(globe);
         }
 
@@ -120,22 +121,22 @@
         {
             Texture pertext = new NoiseTexture(Noise: new Perlin(), Scale: 4);
             Material sphereMat = new Lambertian(pertext);
-            Material diffuseLight = new DiffuseLight(color: new Vec3(3));
+            Material diffuseLight = new DiffuseLight(color: new Vector3(3));
             return new()
             {
-                new Sphere(new Vec3(0, -1000, 0), 1000, sphereMat),
-                new Sphere(new Vec3(0, 2, 0), 2, sphereMat),
-                new Sphere(new Vec3(0, 7, 0), 2, new DiffuseLight(color: new Vec3(3, 3, 0))),
+                new Sphere(new Vector3(0, -1000, 0), 1000, sphereMat),
+                new Sphere(new Vector3(0, 2, 0), 2, sphereMat),
+                new Sphere(new Vector3(0, 7, 0), 2, new DiffuseLight(color: new Vector3(3, 3, 0))),
                 new Rect(RectOrientation.XY, (3, 5), (1, 3), -2, diffuseLight),
             };
         }
 
         public static HittableList CornellBox()
         {
-            Material red = new Lambertian(new Vec3(.65, .05, .05));
-            Material white = new Lambertian(new Vec3(.73, .73, .73));
-            Material green = new Lambertian(new Vec3(.12, .45, .15));
-            Material light = new DiffuseLight(new Vec3(15, 15, 15));
+            Material red = new Lambertian(new Vector3(.65f, .05f, .05f));
+            Material white = new Lambertian(new Vector3(.73f, .73f, .73f));
+            Material green = new Lambertian(new Vector3(.12f, .45f, .15f));
+            Material light = new DiffuseLight(new Vector3(15, 15, 15));
             return new()
             {
                 new Rect(RectOrientation.YZ, (0, 555), (0, 555), 555, green),
@@ -146,23 +147,23 @@
                 new Rect(RectOrientation.XY, (0, 555), (0, 555), 555, white),
                 new Translate(
                     hittable: new RotateY(
-                        hittable: new Box((new Vec3(), new Vec3(165, 330, 165)), white),
+                        hittable: new Box((Vector3.Zero, new Vector3(165, 330, 165)), white),
                         angle: 15),
-                    displacement: new Vec3(265, 0, 295)),
+                    displacement: new Vector3(265, 0, 295)),
                 new Translate(
                     hittable: new RotateY(
-                        hittable: new Box((new Vec3(), new Vec3(165)), white),
+                        hittable: new Box((Vector3.Zero, new Vector3(165)), white),
                         angle: -18),
-                    displacement: new Vec3(130, 0, 65)),
+                    displacement: new Vector3(130, 0, 65)),
             };
         }
 
         public static HittableList CornellSmoke()
         {
-            Material red = new Lambertian(new Vec3(.65, .05, .05));
-            Material white = new Lambertian(new Vec3(.73, .73, .73));
-            Material green = new Lambertian(new Vec3(.12, .45, .15));
-            Material light = new DiffuseLight(new Vec3(7, 7, 7));
+            Material red = new Lambertian(new Vector3(.65f, .05f, .05f));
+            Material white = new Lambertian(new Vector3(.73f, .73f, .73f));
+            Material green = new Lambertian(new Vector3(.12f, .45f, .15f));
+            Material light = new DiffuseLight(new Vector3(7));
             return new()
             {
                 new Rect(RectOrientation.YZ, (0, 555), (0, 555), 555, green),
@@ -174,18 +175,18 @@
                 new ConstantMedium(
                     boundary: new Translate(
                         hittable: new RotateY(
-                            hittable: new Box((new Vec3(), new Vec3(165, 330, 165)), white),
+                            hittable: new Box((Vector3.Zero, new Vector3(165, 330, 165)), white),
                             angle: 15),
-                        displacement: new Vec3(265, 0, 295)),
-                    density: 0.01,
-                    texture: new SolidColor(new Vec3())),
+                        displacement: new Vector3(265, 0, 295)),
+                    density: .01f,
+                    texture: new SolidColor(Vector3.Zero)),
                 new ConstantMedium(
                     boundary: new Translate(
                         hittable: new RotateY(
-                            hittable: new Box((new Vec3(), new Vec3(165)), white),
+                            hittable: new Box((Vector3.Zero, new Vector3(165)), white),
                             angle: -18),
-                        displacement: new Vec3(130, 0, 65)),
-                    density: 0.01,
+                        displacement: new Vector3(130, 0, 65)),
+                    density: .01f,
                     texture: new SolidColor(1)),
             };
         }
@@ -193,48 +194,48 @@
         public static HittableList FinalScene()
         {
             HittableList boxes = new();
-            Material ground = new Lambertian(new SolidColor(.48, .83, .53));
+            Material ground = new Lambertian(new SolidColor(.48f, .83f, .53f));
             const int boxesPerSide = 20;
             for (int i = 0; i < boxesPerSide; i++)
             {
                 for (int j = 0; j < boxesPerSide; j++)
                 {
-                    const double w = 100;
-                    double x0 = -1000 + (i * w);
-                    double z0 = -1000 + (j * w);
-                    double x1 = x0 + w;
-                    double y1 = (new Random().NextDouble() * 100) + 1;
-                    double z1 = z0 + w;
+                    const float w = 100;
+                    float x0 = -1000 + (i * w);
+                    float z0 = -1000 + (j * w);
+                    float x1 = x0 + w;
+                    float y1 = ((float)new Random().NextDouble() * 100) + 1;
+                    float z1 = z0 + w;
                     boxes.Add(new Box(
-                        (new Vec3(x0, 0, z0), new Vec3(x1, y1, z1)),
+                        (new Vector3(x0, 0, z0), new Vector3(x1, y1, z1)),
                         ground));
                 }
             }
 
             HittableList boxes2 = new();
-            Material white = new Lambertian(new SolidColor(.73));
+            Material white = new Lambertian(new SolidColor(.73f));
             for (int j = 0; j < 1000; j++)
             {
-                boxes2.Add(new Sphere(Vec3.GetRandom(0, 165), 10, white));
+                boxes2.Add(new Sphere(Utils.GetRandomVec3(0, 165), 10, white));
             }
 
-            Material dielectric = new Dielectric(1.5);
-            Vec3 center = new(400);
-            Vec3 center2 = center + new Vec3(30, 0, 0);
-            Sphere boundary = new(new Vec3(360, 150, 145), 70, dielectric);
+            Material dielectric = new Dielectric(1.5f);
+            Vector3 center = new(400);
+            Vector3 center2 = center + new Vector3(30, 0, 0);
+            Sphere boundary = new(new Vector3(360, 150, 145), 70, dielectric);
             return new()
             {
                 new BvhNode(boxes, 0, 1),
-                new Rect(RectOrientation.XZ, (123, 423), (147, 412), 554, new DiffuseLight(new Vec3(7, 7, 7))),
-                new MovingSphere(center, center2, 50, new Lambertian(new Vec3(.7, .3, .1)), 0, 1),
-                new Sphere(new Vec3(260, 150, 45), 50, dielectric),
-                new Sphere(new Vec3(0, 150, 145), 50, new Metal(new Vec3(.8, .8, .9), 1)),
+                new Rect(RectOrientation.XZ, (123, 423), (147, 412), 554, new DiffuseLight(new Vector3(7))),
+                new MovingSphere(center, center2, 50, new Lambertian(new Vector3(.7f, .3f, .1f)), 0, 1),
+                new Sphere(new Vector3(260, 150, 45), 50, dielectric),
+                new Sphere(new Vector3(0, 150, 145), 50, new Metal(new Vector3(.8f, .8f, .9f), 1)),
                 boundary,
-                new ConstantMedium(boundary, .2, new SolidColor(.2, .4, .9)),
-                new ConstantMedium(new Sphere(new Vec3(), 5000, dielectric), .0001, new SolidColor(1)),
-                new Sphere(new Vec3(400, 200, 400), 100, new Lambertian(new ImageTexture("Images/earthmap.jpg"))),
-                new Sphere(new Vec3(220, 280, 300), 80, new Lambertian(new NoiseTexture(new Perlin(), .1))),
-                new Translate(new RotateY(new BvhNode(boxes2, 0, 1), 15), new Vec3(-100, 270, 300)),
+                new ConstantMedium(boundary, .2f, new SolidColor(.2f, .4f, .9f)),
+                new ConstantMedium(new Sphere(Vector3.Zero, 5000, dielectric), .0001f, new SolidColor(1)),
+                new Sphere(new Vector3(400, 200, 400), 100, new Lambertian(new ImageTexture("Images/earthmap.jpg"))),
+                new Sphere(new Vector3(220, 280, 300), 80, new Lambertian(new NoiseTexture(new Perlin(), .1f))),
+                new Translate(new RotateY(new BvhNode(boxes2, 0, 1), 15), new Vector3(-100, 270, 300)),
             };
         }
 
@@ -242,7 +243,7 @@
         public static void Main()
         {
             // Image.
-            double aspectRatio = 16 / 9.0;
+            float aspectRatio = 16 / 9f;
             int imageWidth = 400;
             int samplesPerPixel = 10;
             const int maxDepth = 50;
@@ -250,50 +251,50 @@
             // World.
             HittableList world = Program.GetRandomScene();
 
-            Vec3 lookFrom;
-            Vec3 lookAt;
-            Vec3 viewUp = new(0, 1, 0);
-            const double distanceToFocus = 10;
-            double verticalFov = 40;
-            double aperture = .1;
-            Vec3 backgroundColor = new();
+            Vector3 lookFrom;
+            Vector3 lookAt;
+            Vector3 viewUp = Vector3.UnitY;
+            const float distanceToFocus = 10;
+            float verticalFov = 40;
+            float aperture = .1f;
+            Vector3 backgroundColor = Vector3.Zero;
 
-            switch (0)
+            switch (8)
             {
                 case 1:
                     world = Program.GetRandomScene();
-                    backgroundColor = new Vec3(.7, .8, 1);
-                    lookFrom = new Vec3(13, 2, 3);
-                    lookAt = new Vec3(0, 0, 0);
+                    backgroundColor = new Vector3(.7f, .8f, 1);
+                    lookFrom = new Vector3(13, 2, 3);
+                    lookAt = Vector3.Zero;
                     verticalFov = 20;
-                    aperture = .1;
+                    aperture = .1f;
                     break;
                 case 2:
                     world = Program.TwoSpheres();
-                    backgroundColor = new Vec3(.7, .8, 1);
-                    lookFrom = new Vec3(13, 2, 3);
-                    lookAt = new Vec3(0, 0, 0);
+                    backgroundColor = new Vector3(.7f, .8f, 1);
+                    lookFrom = new Vector3(13, 2, 3);
+                    lookAt = Vector3.Zero;
                     verticalFov = 20;
                     break;
                 case 3:
                     world = Program.TwoPerlinSpheres();
-                    backgroundColor = new Vec3(.7, .8, 1);
-                    lookFrom = new Vec3(13, 2, 3);
-                    lookAt = new Vec3(0, 0, 0);
+                    backgroundColor = new Vector3(.7f, .8f, 1);
+                    lookFrom = new Vector3(13, 2, 3);
+                    lookAt = Vector3.Zero;
                     verticalFov = 20;
                     break;
                 case 4:
                     world = Program.Earth();
-                    backgroundColor = new Vec3(.7, .8, 1);
-                    lookFrom = new Vec3(13, 2, 3);
-                    lookAt = new Vec3(0);
+                    backgroundColor = new Vector3(.7f, .8f, 1);
+                    lookFrom = new Vector3(13, 2, 3);
+                    lookAt = Vector3.Zero;
                     verticalFov = 20;
                     break;
                 case 5:
                     world = Program.SimpleLight();
-                    backgroundColor = new Vec3();
-                    lookFrom = new Vec3(26, 3, 6);
-                    lookAt = new Vec3(0, 2, 0);
+                    backgroundColor = Vector3.Zero;
+                    lookFrom = new Vector3(26, 3, 6);
+                    lookAt = new Vector3(0, 2, 0);
                     verticalFov = 20;
                     samplesPerPixel = 400;
                     break;
@@ -302,29 +303,29 @@
                     aspectRatio = 1;
                     imageWidth = 600;
                     samplesPerPixel = 200;
-                    backgroundColor = new Vec3();
-                    lookFrom = new Vec3(278, 278, -800);
-                    lookAt = new Vec3(278, 278, 0);
+                    backgroundColor = Vector3.Zero;
+                    lookFrom = new Vector3(278, 278, -800);
+                    lookAt = new Vector3(278, 278, 0);
                     verticalFov = 40;
                     break;
                 case 7:
                     world = Program.CornellSmoke();
-                    aspectRatio = 1.0;
+                    aspectRatio = 1f;
                     imageWidth = 600;
                     samplesPerPixel = 200;
-                    lookFrom = new Vec3(278, 278, -800);
-                    lookAt = new Vec3(278, 278, 0);
-                    verticalFov = 40.0;
+                    lookFrom = new Vector3(278, 278, -800);
+                    lookAt = new Vector3(278, 278, 0);
+                    verticalFov = 40;
                     break;
                 default:
                     world = Program.FinalScene();
-                    aspectRatio = 1.0;
-                    imageWidth = 500;
-                    samplesPerPixel = 1000;
-                    backgroundColor = new Vec3();
-                    lookFrom = new Vec3(478, 278, -600);
-                    lookAt = new Vec3(278, 278, 0);
-                    verticalFov = 40.0;
+                    aspectRatio = 1;
+                    imageWidth = 800;
+                    samplesPerPixel = 5000;
+                    backgroundColor = Vector3.Zero;
+                    lookFrom = new Vector3(478, 278, -600);
+                    lookAt = new Vector3(278, 278, 0);
+                    verticalFov = 40;
                     break;
             }
 
@@ -351,22 +352,22 @@
                 ConcurrentBag<(int, string)> ppms = new();
                 Parallel.For(0, imageWidth, (j) =>
                 {
-                    ConcurrentBag<(int, Vec3)> colors = new();
-                    Vec3 pixelColor = new();
+                    ConcurrentBag<(int, Vector3)> colors = new();
+                    Vector3 pixelColor = Vector3.Zero;
                     Parallel.For(0, samplesPerPixel - 1, (k) =>
                     {
-                        double u = (j + random.NextDouble()) / (imageWidth - 1);
-                        double v = (i + random.NextDouble()) / (imageHeight - 1);
+                        float u = (j + (float)random.NextDouble()) / (imageWidth - 1);
+                        float v = (i + (float)random.NextDouble()) / (imageHeight - 1);
                         Ray ray = camera.GetRay(u, v);
                         colors.Add((k, Program.RayColor(ray, backgroundColor, world, maxDepth)));
                     });
 
-                    foreach ((int, Vec3) pair in colors.OrderBy(x => x.Item1))
+                    foreach ((int, Vector3) pair in colors.OrderBy(x => x.Item1))
                     {
                         pixelColor += pair.Item2;
                     }
 
-                    ppms.Add((j, Vec3.GetPpmString(pixelColor, samplesPerPixel)));
+                    ppms.Add((j, pixelColor.GetPpmString(samplesPerPixel)));
                 });
 
                 foreach ((int, string) pair in ppms.OrderBy(x => x.Item1))

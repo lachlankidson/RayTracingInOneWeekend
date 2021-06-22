@@ -1,15 +1,16 @@
 ﻿namespace RayTracing.Materials
 {
+    using System.Numerics;
     using RayTracing.Hittables;
 
-    public record Metal(Vec3 Albedo, double Fuzz) : Material
+    public record Metal(Vector3 Albedo, float Fuzz) : Material
     {
-        public override bool Scatter(Ray incidentRay, HitRecord hitRecord, out Vec3 attenuation, out Ray scatteredRay)
+        public override bool Scatter(Ray incidentRay, HitRecord hitRecord, out Vector3 attenuation, out Ray scatteredRay)
         {
-            Vec3 reflected = Vec3.Reflect(Vec3.UnitVector(incidentRay.Direction), hitRecord.Normal);
-            scatteredRay = new Ray(hitRecord.Point, reflected + (this.Fuzz * Vec3.GetRandomInUnitSphere()), incidentRay.Time);
+            Vector3 reflected = Vector3.Reflect(incidentRay.Direction.UnitVector(), hitRecord.Normal);
+            scatteredRay = new Ray(hitRecord.Point, reflected + (this.Fuzz * Utils.GetRandomVec3InUnitSphere()), incidentRay.Time);
             attenuation = this.Albedo;
-            return Vec3.DotProduct(scatteredRay.Direction, hitRecord.Normal) > 0;
+            return Vector3.Dot(scatteredRay.Direction, hitRecord.Normal) > 0;
         }
     }
 }
