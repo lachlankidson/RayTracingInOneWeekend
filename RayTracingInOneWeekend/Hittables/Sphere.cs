@@ -4,21 +4,8 @@
     using System.Numerics;
     using RayTracing.Materials;
 
-    public class Sphere : Hittable
+    public record Sphere(Vector3 Center, float Radius, Material Material) : Hittable
     {
-        public Sphere(Vector3 center, float radius, Material material)
-        {
-            this.Center = center;
-            this.Radius = radius;
-            this.Material = material;
-        }
-
-        public Vector3 Center { get; init; }
-
-        public float Radius { get; init; }
-
-        public Material Material { get; init; }
-
         public static (float U, float V) GetSphereUv(Vector3 point)
         {
             float theta = (float)Math.Acos(-point.Y);

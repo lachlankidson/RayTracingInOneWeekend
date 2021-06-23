@@ -3,7 +3,7 @@
     using System;
     using System.Numerics;
 
-    public class MovingSphere : Sphere
+    public record MovingSphere : Sphere
     {
         public MovingSphere(Vector3 startCenter, Vector3 endCenter, float radius, Materials.Material material, float startMoving, float stopMoving)
             : base(startCenter, radius, material)

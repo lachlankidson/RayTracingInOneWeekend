@@ -5,21 +5,8 @@
     using RayTracing.Materials;
     using RayTracing.Textures;
 
-    public class ConstantMedium : Hittable
+    public record ConstantMedium(Hittable Boundary, float Density, Material PhaseFunction) : Hittable
     {
-        public ConstantMedium(Hittable boundary, float density, Texture texture)
-        {
-            this.Boundary = boundary;
-            this.Density = density;
-            this.PhaseFunction = new Isotropic(texture);
-        }
-
-        public Hittable Boundary { get; init; }
-
-        public float Density { get; init; }
-
-        public Material PhaseFunction { get; init; }
-
         public override bool Hit(Ray ray, float tMin, float tMax, ref HitRecord hitRecord)
         {
             HitRecord rec1 = default;

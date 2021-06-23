@@ -114,7 +114,10 @@
             Texture earthTexture = new ImageTexture("Images/earthmap.jpg");
             Material earthMaterial = new Lambertian(earthTexture);
             Sphere globe = new(Vector3.Zero, 2, earthMaterial);
-            return new HittableList(globe);
+            return new()
+            {
+                globe,
+            };
         }
 
         public static HittableList SimpleLight()
@@ -146,15 +149,15 @@
                 new Rect(RectOrientation.XZ, (0, 555), (0, 555), 555, white),
                 new Rect(RectOrientation.XY, (0, 555), (0, 555), 555, white),
                 new Translate(
-                    hittable: new RotateY(
+                    Hittable: new RotateY(
                         hittable: new Box((Vector3.Zero, new Vector3(165, 330, 165)), white),
                         angle: 15),
-                    displacement: new Vector3(265, 0, 295)),
+                    Displacement: new Vector3(265, 0, 295)),
                 new Translate(
-                    hittable: new RotateY(
+                    Hittable: new RotateY(
                         hittable: new Box((Vector3.Zero, new Vector3(165)), white),
                         angle: -18),
-                    displacement: new Vector3(130, 0, 65)),
+                    Displacement: new Vector3(130, 0, 65)),
             };
         }
 
@@ -173,21 +176,21 @@
                 new Rect(RectOrientation.XZ, (0, 555), (0, 555), 555, white),
                 new Rect(RectOrientation.XY, (0, 555), (0, 555), 555, white),
                 new ConstantMedium(
-                    boundary: new Translate(
-                        hittable: new RotateY(
+                    Boundary: new Translate(
+                        Hittable: new RotateY(
                             hittable: new Box((Vector3.Zero, new Vector3(165, 330, 165)), white),
                             angle: 15),
-                        displacement: new Vector3(265, 0, 295)),
-                    density: .01f,
-                    texture: new SolidColor(Vector3.Zero)),
+                        Displacement: new Vector3(265, 0, 295)),
+                    Density: .01f,
+                    PhaseFunction: new Isotropic(new SolidColor(Vector3.Zero))),
                 new ConstantMedium(
-                    boundary: new Translate(
-                        hittable: new RotateY(
+                    Boundary: new Translate(
+                        Hittable: new RotateY(
                             hittable: new Box((Vector3.Zero, new Vector3(165)), white),
                             angle: -18),
-                        displacement: new Vector3(130, 0, 65)),
-                    density: .01f,
-                    texture: new SolidColor(1)),
+                        Displacement: new Vector3(130, 0, 65)),
+                    Density: .01f,
+                    PhaseFunction: new Isotropic(new SolidColor(1))),
             };
         }
 
@@ -231,21 +234,20 @@
                 new Sphere(new Vector3(260, 150, 45), 50, dielectric),
                 new Sphere(new Vector3(0, 150, 145), 50, new Metal(new Vector3(.8f, .8f, .9f), 1)),
                 boundary,
-                new ConstantMedium(boundary, .2f, new SolidColor(.2f, .4f, .9f)),
-                new ConstantMedium(new Sphere(Vector3.Zero, 5000, dielectric), .0001f, new SolidColor(1)),
+                new ConstantMedium(boundary, .2f, new Isotropic(new SolidColor(.2f, .4f, .9f))),
+                new ConstantMedium(new Sphere(Vector3.Zero, 5000, dielectric), .0001f, new Isotropic(new SolidColor(1))),
                 new Sphere(new Vector3(400, 200, 400), 100, new Lambertian(new ImageTexture("Images/earthmap.jpg"))),
                 new Sphere(new Vector3(220, 280, 300), 80, new Lambertian(new NoiseTexture(new Perlin(), .1f))),
                 new Translate(new RotateY(new BvhNode(boxes2, 0, 1), 15), new Vector3(-100, 270, 300)),
             };
         }
 
-
         public static void Main()
         {
             // Image.
             float aspectRatio = 16 / 9f;
-            int imageWidth = 400;
-            int samplesPerPixel = 10;
+            int imageWidth = 1200;
+            int samplesPerPixel = 100;
             const int maxDepth = 50;
 
             // World.
@@ -258,8 +260,7 @@
             float verticalFov = 40;
             float aperture = .1f;
             Vector3 backgroundColor = Vector3.Zero;
-
-            switch (8)
+            switch (1)
             {
                 case 1:
                     world = Program.GetRandomScene();

@@ -4,27 +4,8 @@
     using System.Numerics;
     using RayTracing.Materials;
 
-    public class Rect : Hittable
+    public record Rect(RectOrientation Orientation, (float A, float B) A, (float A, float B) B, float K, Material Material) : Hittable
     {
-        public Rect(RectOrientation orientation, (float A, float B) a, (float A, float B) b, float k, Material material)
-        {
-            this.A = a;
-            this.B = b;
-            this.K = k;
-            this.Material = material;
-            this.Orientation = orientation;
-        }
-
-        public (float A, float B) A { get; init; }
-
-        public (float A, float B) B { get; init; }
-
-        public float K { get; init; }
-
-        public Material Material { get; init; }
-
-        public RectOrientation Orientation { get; init; }
-
         public override bool Hit(Ray ray, float tMin, float tMax, ref HitRecord hitRecord)
         {
             int index = Math.Abs((int)this.Orientation - 2);

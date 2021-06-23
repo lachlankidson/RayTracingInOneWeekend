@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    public class BvhNode : Hittable
+    public record BvhNode : Hittable
     {
         public BvhNode(IEnumerable<Hittable> source, float time0, float time1)
             : this(source, 0, source.Count(), time0, time1)

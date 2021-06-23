@@ -4,7 +4,7 @@
     using System.Linq;
     using System.Numerics;
 
-    public class RotateY : Hittable
+    public record RotateY : Hittable
     {
         public RotateY(Hittable hittable, float angle)
         {

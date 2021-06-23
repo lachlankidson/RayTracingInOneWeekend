@@ -1,6 +1,6 @@
 ﻿namespace RayTracing.Hittables
 {
-    public abstract class Hittable
+    public abstract record Hittable
     {
         public virtual bool Hit(Ray ray, float tMin, float tMax, ref HitRecord hitRecord) => false;
 

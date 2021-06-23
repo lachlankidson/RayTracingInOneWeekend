@@ -2,18 +2,8 @@
 {
     using System.Numerics;
 
-    public class Translate : Hittable
+    public record Translate(Hittable Hittable, Vector3 Displacement) : Hittable
     {
-        public Translate(Hittable hittable, Vector3 displacement)
-        {
-            this.Hittable = hittable;
-            this.Displacement = displacement;
-        }
-
-        public Hittable Hittable { get; set; }
-
-        public Vector3 Displacement { get; set; }
-
         public override bool Hit(Ray ray, float tMin, float tMax, ref HitRecord hitRecord)
         {
             Ray movedRay = new(ray.Origin - this.Displacement, ray.Direction, ray.Time);

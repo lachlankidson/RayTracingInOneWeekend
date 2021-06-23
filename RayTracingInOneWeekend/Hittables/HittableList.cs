@@ -3,20 +3,10 @@
     using System.Collections;
     using System.Collections.Generic;
 
-    public class HittableList : Hittable, IEnumerable<Hittable>
+    public record HittableList : Hittable, IEnumerable<Hittable>
     {
         public HittableList()
         {
-        }
-
-        public HittableList(Hittable hittable)
-        {
-            this.Hittables.Add(hittable);
-        }
-
-        public HittableList(IEnumerable<Hittable> hittables)
-        {
-            this.Hittables.AddRange(hittables);
         }
 
         private List<Hittable> Hittables { get; init; } = new();
