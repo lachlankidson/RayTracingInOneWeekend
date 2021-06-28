@@ -3,7 +3,6 @@
     using System;
     using System.Numerics;
     using RayTracing.Materials;
-    using RayTracing.Textures;
 
     public record ConstantMedium(Hittable Boundary, float Density, Material PhaseFunction) : Hittable
     {
