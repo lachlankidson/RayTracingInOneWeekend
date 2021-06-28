@@ -60,9 +60,9 @@
             Vector3 rd = this.LensRadius * Utils.GetRandomVec3InUnitDisk();
             Vector3 offset = (this.U * rd.X) + (this.V * rd.Y);
             return new Ray(
-                origin: this.Origin + offset,
-                direction: this.LowerLeftCorner + (s * this.Horizontal) + (t * this.Vertical) - this.Origin - offset,
-                time: ((float)random.NextDouble() * (this.ShutterClose - this.ShutterOpen)) + this.ShutterOpen);
+                Origin: this.Origin + offset,
+                Direction: this.LowerLeftCorner + (s * this.Horizontal) + (t * this.Vertical) - this.Origin - offset,
+                Time: ((float)random.NextDouble() * (this.ShutterClose - this.ShutterOpen)) + this.ShutterOpen);
         }
     }
 }
