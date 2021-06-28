@@ -19,8 +19,6 @@
         }
 
         public override Vector3 Emitted(float u, float v, Vector3 point)
-        {
-            return this.Emit.Value(u, v, point);
-        }
+            => this.Emit.Value(u, v, point);
     }
 }
