@@ -3,26 +3,16 @@
     using System;
     using System.Numerics;
 
-    public class AxisAlignedBoundingBox
+    public record AxisAlignedBoundingBox(Vector3 Minimum, Vector3 Maximum)
     {
-        public AxisAlignedBoundingBox(Vector3 minimum, Vector3 maximum)
-        {
-            this.Minimum = minimum;
-            this.Maximum = maximum;
-        }
-
-        public Vector3 Minimum { get; init; }
-
-        public Vector3 Maximum { get; init; }
-
         public static AxisAlignedBoundingBox GetSurroundingBox(AxisAlignedBoundingBox a, AxisAlignedBoundingBox b)
         {
             static Vector3 GetVec(Func<float, float, float> reduce, Vector3 a, Vector3 b) =>
                 new(reduce(a.X, b.X), reduce(a.Y, b.Y), reduce(a.Z, b.Z));
 
             return new AxisAlignedBoundingBox(
-                minimum: GetVec(Math.Min, a.Minimum, b.Minimum),
-                maximum: GetVec(Math.Max, a.Maximum, b.Maximum));
+                Minimum: GetVec(Math.Min, a.Minimum, b.Minimum),
+                Maximum: GetVec(Math.Max, a.Maximum, b.Maximum));
         }
 
         public bool Hit(Ray ray, double tMin, double tMax)

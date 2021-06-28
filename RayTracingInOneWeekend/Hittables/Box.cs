@@ -62,8 +62,8 @@
         public override bool BoundingBox(float time0, float time1, out AxisAlignedBoundingBox boundingBox)
         {
             boundingBox = new AxisAlignedBoundingBox(
-                minimum: this.Coordinates.A,
-                maximum: this.Coordinates.B);
+                Minimum: this.Coordinates.A,
+                Maximum: this.Coordinates.B);
             return true;
         }
     }
