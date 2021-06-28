@@ -30,12 +30,12 @@
                             sphereMaterial = new Lambertian(albedo);
                             Vector3 center2 = center + new Vector3(0, (float)random.NextDouble() / 2, 0);
                             world.Add(new MovingSphere(
-                                startCenter: center,
-                                endCenter: center2,
-                                radius: .2f,
-                                material: sphereMaterial,
-                                startMoving: 0,
-                                stopMoving: 1));
+                                StartCenter: center,
+                                EndCenter: center2,
+                                Radius: .2f,
+                                Material: sphereMaterial,
+                                StartMoving: 0,
+                                StopMoving: 1));
                         }
                         else if (chooseMat < .95)
                         {
