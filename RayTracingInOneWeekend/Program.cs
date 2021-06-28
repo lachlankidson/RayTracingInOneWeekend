@@ -6,33 +6,9 @@
     using System.Numerics;
     using System.Threading.Tasks;
     using RayTracing.Hittables;
-    using RayTracing.Materials;
-    using RayTracing.Textures;
 
     public static class Program
     {
-        public static Vector3 RayColor(Ray ray, Vector3 background, Hittable world, uint depth)
-        {
-            if (depth == 0)
-            {
-                return Vector3.Zero;
-            }
-
-            HitRecord hitRecord = default;
-            if (!world.Hit(ray, 0.001f, float.PositiveInfinity, ref hitRecord))
-            {
-                return background;
-            }
-
-            Vector3 emitted = hitRecord.Material.Emitted(hitRecord.U, hitRecord.V, hitRecord.Point);
-            if (!hitRecord.Material.Scatter(ray, hitRecord, out Vector3 attenuation, out Ray scatteredRay))
-            {
-                return emitted;
-            }
-
-            return emitted + (attenuation * Program.RayColor(scatteredRay, background, world, depth - 1));
-        }
-
         public static void Main()
         {
             // Image.
@@ -151,7 +127,7 @@
                         float u = (j + (float)random.NextDouble()) / (imageWidth - 1);
                         float v = (i + (float)random.NextDouble()) / (imageHeight - 1);
                         Ray ray = camera.GetRay(u, v);
-                        colors.Add((k, Program.RayColor(ray, backgroundColor, world, maxDepth)));
+                        colors.Add((k, ray.GetColor(backgroundColor, world, maxDepth)));
                     });
 
                     foreach ((int, Vector3) pair in colors.OrderBy(x => x.Item1))
