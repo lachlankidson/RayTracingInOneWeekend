@@ -4,15 +4,8 @@
     using System.Collections.Generic;
     using RayTracing.Hittables;
 
-    public class BoxComparer : IComparer<Hittable>
+    public record BoxComparer(int Axis) : IComparer<Hittable>
     {
-        public BoxComparer(int axis)
-        {
-            this.Axis = axis;
-        }
-
-        public int Axis { get; init; }
-
         int IComparer<Hittable>.Compare(Hittable? x, Hittable? y)
         {
             if (x is null)
