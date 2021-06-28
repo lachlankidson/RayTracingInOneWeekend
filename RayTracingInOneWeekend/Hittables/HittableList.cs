@@ -5,10 +5,6 @@
 
     public record HittableList : Hittable, IEnumerable<Hittable>
     {
-        public HittableList()
-        {
-        }
-
         private List<Hittable> Hittables { get; init; } = new();
 
         public void Add(Hittable hittable)
