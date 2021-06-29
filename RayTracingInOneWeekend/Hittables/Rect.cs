@@ -40,18 +40,16 @@
             return true;
         }
 
-        public override bool BoundingBox(float time0, float time1, out AxisAlignedBoundingBox boundingBox)
+        public override AxisAlignedBoundingBox? BoundingBox(float time0, float time1)
         {
             const float kAdjust = .0001f;
-            boundingBox = this.Orientation switch
+            return this.Orientation switch
             {
                 RectOrientation.XY => new(new Vector3(this.A.A, this.B.A, this.K - kAdjust), new Vector3(this.A.B, this.B.B, this.K + kAdjust)),
                 RectOrientation.XZ => new(new Vector3(this.A.A, this.K - kAdjust, this.B.A), new Vector3(this.A.B, this.K + kAdjust, this.B.B)),
                 RectOrientation.YZ => new(new Vector3(this.K - kAdjust, this.A.A, this.B.A), new Vector3(this.K + kAdjust, this.A.B, this.B.B)),
                 _ => throw new NotImplementedException(),
             };
-
-            return true;
         }
     }
 }

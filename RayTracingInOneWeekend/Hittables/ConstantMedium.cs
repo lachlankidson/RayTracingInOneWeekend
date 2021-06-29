@@ -56,7 +56,7 @@
             return true;
         }
 
-        public override bool BoundingBox(float time0, float time1, out AxisAlignedBoundingBox? boundingBox)
-            => this.Boundary.BoundingBox(time0, time1, out boundingBox);
+        public override AxisAlignedBoundingBox? BoundingBox(float time0, float time1)
+            => this.Boundary.BoundingBox(time0, time1);
     }
 }

@@ -13,8 +13,9 @@
             float radians = (float)Math.PI / 180 * this.Angle;
             float sinTheta = (float)Math.Sin(radians);
             float cosTheta = (float)Math.Cos(radians);
-            this.HasBox = this.Hittable.BoundingBox(0, 1, out AxisAlignedBoundingBox? boundingBox);
-            if (!this.HasBox || boundingBox is null)
+
+            AxisAlignedBoundingBox? boundingBox = this.Hittable.BoundingBox(0, 1);
+            if (boundingBox is null)
             {
                 this.Box = null;
                 return;
@@ -22,7 +23,6 @@
 
             var min = Enumerable.Repeat(float.PositiveInfinity, 3).ToArray();
             var max = Enumerable.Repeat(float.NegativeInfinity, 3).ToArray();
-
             for (int i = 0; i < 2; i++)
             {
                 for (int j = 0; j < 2; j++)
@@ -52,8 +52,6 @@
         }
 
         public float Angle { get; init; }
-
-        public bool HasBox { get; init; }
 
         public AxisAlignedBoundingBox? Box { get; init; }
 
@@ -91,10 +89,6 @@
             return true;
         }
 
-        public override bool BoundingBox(float time0, float time1, out AxisAlignedBoundingBox? boundingBox)
-        {
-            boundingBox = this.Box;
-            return this.HasBox;
-        }
+        public override AxisAlignedBoundingBox? BoundingBox(float time0, float time1) => this.Box;
     }
 }

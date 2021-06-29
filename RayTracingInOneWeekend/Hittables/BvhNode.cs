@@ -40,9 +40,9 @@
                 this.Right = new BvhNode(hittables, mid, end, time0, time1);
             }
 
-            bool condA = !this.Left.BoundingBox(time0, time1, out AxisAlignedBoundingBox? boxLeft);
-            bool condB = !this.Right.BoundingBox(time0, time1, out AxisAlignedBoundingBox? boxRight);
-            if (condA || condB || boxLeft is null || boxRight is null)
+            AxisAlignedBoundingBox? boxLeft = this.Left.BoundingBox(time0, time1);
+            AxisAlignedBoundingBox? boxRight = this.Right.BoundingBox(time0, time1);
+            if (boxLeft is null || boxRight is null)
             {
                 throw new Exception();
             }
@@ -56,11 +56,7 @@
 
         public AxisAlignedBoundingBox Box { get; init; }
 
-        public override bool BoundingBox(float time0, float time1, out AxisAlignedBoundingBox? boundingBox)
-        {
-            boundingBox = this.Box;
-            return true;
-        }
+        public override AxisAlignedBoundingBox? BoundingBox(float time0, float time1) => this.Box;
 
         public override bool Hit(Ray ray, float tMin, float tMax, ref HitRecord hitRecord)
         {

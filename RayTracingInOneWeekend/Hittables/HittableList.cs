@@ -12,23 +12,23 @@
             this.Hittables.Add(hittable);
         }
 
-        public override bool BoundingBox(float time0, float time1, out AxisAlignedBoundingBox? boundingBox)
+        public override AxisAlignedBoundingBox? BoundingBox(float time0, float time1)
         {
-            boundingBox = null;
+            AxisAlignedBoundingBox? boundingBox = null;
             if (this.Hittables.Count == 0)
             {
-                return false;
+                return null;
             }
 
-            bool firstBox = true;
             foreach (Hittable hittable in this.Hittables)
             {
-                if (!hittable.BoundingBox(time0, time1, out AxisAlignedBoundingBox? tempBox) || tempBox is null)
+                AxisAlignedBoundingBox? tempBox = hittable.BoundingBox(time0, time1);
+                if (tempBox is null)
                 {
-                    return false;
+                    return null;
                 }
 
-                if (firstBox || boundingBox is null)
+                if (boundingBox is null)
                 {
                     boundingBox = tempBox;
                 }
@@ -36,11 +36,9 @@
                 {
                     boundingBox = AxisAlignedBoundingBox.GetSurroundingBox(boundingBox, tempBox);
                 }
-
-                firstBox = false;
             }
 
-            return true;
+            return boundingBox;
         }
 
         public override bool Hit(Ray ray, float tMin, float tMax, ref HitRecord hitRecord)

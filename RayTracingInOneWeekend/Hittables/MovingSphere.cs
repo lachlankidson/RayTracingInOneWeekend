@@ -41,7 +41,7 @@
             return true;
         }
 
-        public override bool BoundingBox(float startTime, float endTime, out AxisAlignedBoundingBox boundingBox)
+        public override AxisAlignedBoundingBox BoundingBox(float startTime, float endTime)
         {
             AxisAlignedBoundingBox GetBox(float time)
             {
@@ -50,8 +50,7 @@
                 return new(center - radiusVec, center + radiusVec);
             }
 
-            boundingBox = AxisAlignedBoundingBox.GetSurroundingBox(GetBox(startTime), GetBox(endTime));
-            return true;
+            return AxisAlignedBoundingBox.GetSurroundingBox(GetBox(startTime), GetBox(endTime));
         }
     }
 }

@@ -45,11 +45,10 @@
             return true;
         }
 
-        public override bool BoundingBox(float time0, float time1, out AxisAlignedBoundingBox boundingBox)
+        public override  AxisAlignedBoundingBox? BoundingBox(float time0, float time1)
         {
             Vector3 radiusVec = new(this.Radius);
-            boundingBox = new AxisAlignedBoundingBox(this.Center - radiusVec, this.Center + radiusVec);
-            return true;
+            return new AxisAlignedBoundingBox(this.Center - radiusVec, this.Center + radiusVec);
         }
     }
 }
