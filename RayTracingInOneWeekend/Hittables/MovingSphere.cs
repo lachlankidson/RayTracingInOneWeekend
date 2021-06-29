@@ -2,23 +2,11 @@
 {
     using System;
     using System.Numerics;
+    using RayTracing.Materials;
 
-    public record MovingSphere : Sphere
+    public record MovingSphere(Vector3 StartCenter, Vector3 EndCenter, float Radius, Material Material, float StartMoving, float StopMoving)
+        : Sphere(Center: StartCenter, Radius, Material)
     {
-        public MovingSphere(Vector3 startCenter, Vector3 endCenter, float radius, Materials.Material material, float startMoving, float stopMoving)
-            : base(startCenter, radius, material)
-        {
-            this.StartMoving = startMoving;
-            this.StopMoving = stopMoving;
-            this.EndCenter = endCenter;
-        }
-
-        public float StartMoving { get; init; }
-
-        public float StopMoving { get; init; }
-
-        public Vector3 EndCenter { get; init; }
-
         public Vector3 GetCenterAt(float time) =>
             this.Center + (((time - this.StartMoving) / (this.StopMoving - this.StartMoving)) * (this.Center - this.EndCenter));
 
@@ -53,7 +41,7 @@
             return true;
         }
 
-        public override bool BoundingBox(float startTime, float endTime, out AxisAlignedBoundingBox boundingBox)
+        public override AxisAlignedBoundingBox BoundingBox(float startTime, float endTime)
         {
             AxisAlignedBoundingBox GetBox(float time)
             {
@@ -62,8 +50,7 @@
                 return new(center - radiusVec, center + radiusVec);
             }
 
-            boundingBox = AxisAlignedBoundingBox.GetSurroundingBox(GetBox(startTime), GetBox(endTime));
-            return true;
+            return AxisAlignedBoundingBox.GetSurroundingBox(GetBox(startTime), GetBox(endTime));
         }
     }
 }

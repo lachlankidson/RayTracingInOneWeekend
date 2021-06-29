@@ -59,12 +59,7 @@
         public override bool Hit(Ray ray, float tMin, float tMax, ref HitRecord hitRecord)
             => this.Sides.Hit(ray, tMin, tMax, ref hitRecord);
 
-        public override bool BoundingBox(float time0, float time1, out AxisAlignedBoundingBox boundingBox)
-        {
-            boundingBox = new AxisAlignedBoundingBox(
-                minimum: this.Coordinates.A,
-                maximum: this.Coordinates.B);
-            return true;
-        }
+        public override AxisAlignedBoundingBox? BoundingBox(float time0, float time1)
+            => new(this.Coordinates.A, this.Coordinates.B);
     }
 }

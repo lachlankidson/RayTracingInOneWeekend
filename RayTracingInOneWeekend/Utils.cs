@@ -5,21 +5,10 @@
 
     public static class Utils
     {
-        public static Vector3 GetRandomVec3()
-        {
-            Random random = new();
-            return new Vector3((float)random.NextDouble(), (float)random.NextDouble(), (float)random.NextDouble());
-        }
+        private static float RandRange(float min, float max) => ((float)new Random().NextDouble() * (max - min)) + min;
 
-        public static Vector3 GetRandomVec3(float min, float max)
-        {
-            Random random = new();
-            float dif = max - min;
-            return new Vector3(
-                ((float)random.NextDouble() * dif) + min,
-                ((float)random.NextDouble() * dif) + min,
-                ((float)random.NextDouble() * dif) + min);
-        }
+        public static Vector3 GetRandomVec3(float min = 0, float max = 1)
+            => new(Utils.RandRange(min, max), Utils.RandRange(min, max), Utils.RandRange(min, max));
 
         public static Vector3 UnitVector(this Vector3 vec) => vec / vec.Length();
 
@@ -41,13 +30,9 @@
 
         public static Vector3 GetRandomVec3InUnitDisk()
         {
-            Random random = new();
             while (true)
             {
-                Vector3 p = new(
-                    ((float)random.NextDouble() * 2) - 1,
-                    ((float)random.NextDouble() * 2) - 1,
-                    0);
+                Vector3 p = new(Utils.RandRange(1, -1), Utils.RandRange(1, -1), 0);
                 if (p.LengthSquared() >= 1)
                 {
                     continue;

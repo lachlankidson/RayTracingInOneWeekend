@@ -3,7 +3,6 @@
     using System;
     using System.Numerics;
     using RayTracing.Materials;
-    using RayTracing.Textures;
 
     public record ConstantMedium(Hittable Boundary, float Density, Material PhaseFunction) : Hittable
     {
@@ -57,7 +56,7 @@
             return true;
         }
 
-        public override bool BoundingBox(float time0, float time1, out AxisAlignedBoundingBox? boundingBox)
-            => this.Boundary.BoundingBox(time0, time1, out boundingBox);
+        public override AxisAlignedBoundingBox? BoundingBox(float time0, float time1)
+            => this.Boundary.BoundingBox(time0, time1);
     }
 }

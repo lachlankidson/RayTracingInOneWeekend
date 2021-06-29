@@ -17,17 +17,17 @@
             return true;
         }
 
-        public override bool BoundingBox(float time0, float time1, out AxisAlignedBoundingBox? boundingBox)
+        public override AxisAlignedBoundingBox? BoundingBox(float time0, float time1)
         {
-            if (!this.Hittable.BoundingBox(time0, time1, out boundingBox) || boundingBox is null)
+            AxisAlignedBoundingBox? boundingBox = this.Hittable.BoundingBox(time0, time1);
+            if (boundingBox is null)
             {
-                return false;
+                return null;
             }
 
-            boundingBox = new AxisAlignedBoundingBox(
+            return new AxisAlignedBoundingBox(
                 boundingBox.Minimum + this.Displacement,
                 boundingBox.Maximum + this.Displacement);
-            return true;
         }
     }
 }
