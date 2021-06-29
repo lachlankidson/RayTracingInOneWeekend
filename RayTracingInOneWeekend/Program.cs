@@ -22,7 +22,6 @@
 
             Vector3 lookFrom;
             Vector3 lookAt;
-            Vector3 viewUp = Vector3.UnitY;
             const float distanceToFocus = 10;
             float verticalFov = 40;
             float aperture = .1f;
@@ -103,13 +102,12 @@
             Camera camera = new(
                 lookFrom,
                 lookAt,
-                viewUp,
                 verticalFov,
                 aspectRatio,
                 aperture,
                 distanceToFocus,
-                shutterOpen: 0,
-                shutterClose: 1);
+                ShutterOpen: 0,
+                ShutterClose: 1);
 
             // Render.
             Random random = new();
